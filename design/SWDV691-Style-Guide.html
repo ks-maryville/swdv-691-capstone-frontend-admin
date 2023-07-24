@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+<!--    <link rel="stylesheet" href="./styles.css">-->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+        body{
+            font-family: sans-serif;
+        }
+        .content{
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+        .font{
+            font-family: 'Roboto';
+        }
+        .font-colors > .color-1{
+            color: #04080F;
+        }
+        .font-colors > .color-2{
+            color: #BBD1EA;
+        }
+        .font-colors > .color-3{
+            color: #507DBC;
+        }
+
+        .theme > .color-1{
+            background-color: #BBD1EA;
+        }
+        .theme > .color-2{
+            background-color: #507DBC;
+        }
+        .theme > .color-3{
+            background-color: #04080F;
+        }
+        .theme > .color-1, .theme > .color-2, .theme >.color-3{
+            height: 100px;
+            width: 100px;
+        }
+        .button-1  {
+            border: none;
+
+            color: white;
+            background-color: #507DBC;
+        }
+        .button-2{
+            border: none;
+
+            color: #507DBC;
+            background-color: white;
+            border: 1px solid #507DBC;
+
+        }
+        .button-1, .button-2{
+            border-radius: 15px;
+            padding: 10px;
+        }
+        .text-input{
+            height: 25px;
+            font-size: 1.1em;
+            padding: 5px 5px 5px 10px;
+            border: 1px solid #507DBC;
+            border-radius: 10px;
+
+        }
+        .warning, .success, .danger{
+            height: 100px;
+            width: 100px;
+            color: white;
+            text-align: center;
+            line-height: 100px;
+            font-weight: bold;
+        }
+        .warning{
+            background-color: #FDFD96;
+            color: #507DBC;
+        }
+        .danger{
+            background-color: #FAA0A0;
+        }
+        .success{
+            background-color: #deedff;
+        }
+
+    </style>
+</head>
+<body>
+<h1>SWDV691 Software Development Capstone</h1>
+<h2>Style Guide</h2>
+<h3>Kevin Sherrell</h3>
+<div class="content">
+    <section class="font">
+
+
+        <h1>Font</h1>
+        <p class="headers">Roboto</p>
+        <div class="font-colors">
+            <p class="color-1">Color_1: #04080F</p>
+            <p class="color-2">Color_2: #BBD1EA</p>
+            <p class="color-3">Color_3: #507DBC</p>
+        </div>
+    </section>
+    <section class="theme">
+        <h1>Color Theme</h1>
+        <div class="color-1"></div>
+        <div class="color-2"></div>
+        <div class="color-3"></div>
+    </section>
+    <section class="headings">
+        <h1>Headings</h1>
+        <h1>Heading 1</h1>
+        <h3>Heading 2</h3>
+        <h4>Heading 3</h4>
+    </section>
+    <section class="buttons">
+        <h1>Buttons</h1>
+        <button class="button-1">button</button>
+        <button class="button-2">button</button>
+    </section>
+    <section class="form-elements">
+        <h1>Form Elements</h1>
+        <label for="">Text Input</label> <input type="text" class="text-input" placeholder="text goes here">
+    </section>
+    <section class="messages">
+        <h1>Messages</h1>
+        <p class="danger">Danger</p>
+        <p class="warning">Warning</p>
+        <p class="success">Success</p>
+    </section>
+</div>
+
+</body>
+</html>
