@@ -1,3 +1,6 @@
+import React from "react";
+import CustomersTable from '../../../components/Tables/CustomersTable'
+import {customerProfileComplete} from '@/types/types';
 export default function CustomersPage(){
-    return <h1>Customers Page</h1>
+    return <CustomersTable {...customerProfileComplete}/>
 };

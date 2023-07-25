@@ -1,18 +1,13 @@
 "use client";
 import Image from 'next/image'
 import React, {ChangeEvent, useState} from "react";
+import {IAuth} from "@/types/types";
 
 export default function Home() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    interface IAuth {
-        email: string;
-        password: string;
-    }
-    interface IRegister extends IAuth {
-        verify: string;
-    }
+
 
     let authObj: IAuth = {
         email: email,
