@@ -1,4 +1,4 @@
-import {CustomerProfileData, CustomerProfileArray} from "@/types/types";
+import {CustomerProfileData, CustomerProfileArray} from "@/types/customerTypes";
 import {randomUUID} from "crypto";
 import * as querystring from "querystring";
 
@@ -18,12 +18,7 @@ export default function CustomersTable(profileData: CustomerProfileArray) {
         )
     })
 
-    // const mappedData = Object.keys(profileData).map((key: string) => {
-    //     if (key !== "addresses" && key !== "orders" && key !== "appointments") {
-    //         return <td key={profileData.profile_id + randomUUID()}>{profileData[key]}</td>
-    //
-    //     }
-    // })
+
     return (
         <table>
             <tbody>
