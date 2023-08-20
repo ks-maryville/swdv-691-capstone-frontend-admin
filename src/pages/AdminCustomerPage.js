@@ -1,5 +1,6 @@
 import {useState} from "react";
 import {useCustomerContext, UserCustomerContext} from "../context/CustomerContext";
+import {CustomerTable} from "../components/tables/customerTable/CustomerTable";
 
 export const AdminCustomerPage = () => {
     const [firstName, setfirstName] = useState("");
@@ -32,10 +33,10 @@ export const AdminCustomerPage = () => {
             <input type="text" placeholder={"phone number"} onChange={(e) => setPhoneNumber(e.target.value)}/>
             <input type="text" placeholder={"email"} onChange={(e) => setEmail(e.target.value)}/>
             <button onClick={() => handleSubmit()}>SEARCH</button>
-            <div className="customerTable">
+            <CustomerTable className="customerTable"/>
 
 
-            </div>
+
             <div className="ordersTable"></div>
             <div className="appointmentsTable"></div>
         </div>

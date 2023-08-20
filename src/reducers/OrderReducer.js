@@ -1,28 +1,27 @@
 export const ACTIONS = {
-    GET_ALL_CUSTOMERS: "get_all_customers",
-    SELECT_CUSTOMER: "select_customer",
-    GET_ASSOCIATED_ORDERS: "get_associated_orders",
-    GET_ASSOCIATED_APPOINTMENTS: "get_associated_appointments",
+    GET_ORDERS: "get_orders",
+    SELECT_ORDER: "select_order",
     SEARCH_ERROR: "search_error"
 }
 
-export const customerReducer = (state, action) => {
+export const orderReducer = (state, action) => {
     switch (action.type) {
-        case "get_all_customers":
+        case "get_orders":
             return {
-                customers: action.payload.data
+                orders: action.payload.data
             }
         case "search_error":
             return {
                 message: action.payload.message
             }
-        case "select_customer":
-            console.log(action.payload);
+        case "select_order":
             return {
-                ...state,
-                selectedCustomer: action.payload.data
+                selectedOrder: action.payload.data
             }
-
+        // case "get_associated_appointments":
+        //     return {
+        //         associatedAppointments: action.payload.data
+        //     }
         // case "logout_user":
         //     return {
         //         authenticated: false,

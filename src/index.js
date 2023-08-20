@@ -6,6 +6,7 @@ import reportWebVitals from './reportWebVitals';
 import {AuthProvider} from "./context/AuthContext";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import {CustomerProvider} from "./context/CustomerContext";
+import {OrderProvider} from "./context/OrderContext";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -13,9 +14,11 @@ root.render(
         <BrowserRouter>
             <AuthProvider>
                 <CustomerProvider>
-                    <Routes>
-                        <Route path={"/*"} element={<App/>}/>
-                    </Routes>
+                    <OrderProvider>
+                        <Routes>
+                            <Route path={"/*"} element={<App/>}/>
+                        </Routes>
+                    </OrderProvider>
                 </CustomerProvider>
             </AuthProvider>
         </BrowserRouter>
