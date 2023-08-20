@@ -1,6 +1,10 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {useCustomerContext, UserCustomerContext} from "../context/CustomerContext";
 import {CustomerTable} from "../components/tables/customerTable/CustomerTable";
+import {OrderTable} from "../components/tables/orderTable/OrderTable";
+import {AppointmentTable} from "../components/tables/appointmentTable/AppointmentTable";
+import {useOrderContext} from "../context/OrderContext";
+import {useAppointmentContext} from "../context/AppointmentContext";
 
 export const AdminCustomerPage = () => {
     const [firstName, setfirstName] = useState("");
@@ -8,16 +12,15 @@ export const AdminCustomerPage = () => {
     const [phoneNumber, setPhoneNumber] = useState("");
     const [email, setEmail] = useState("");
 
-    const {customerSearch} = useCustomerContext();
+    const {customerSearch, getAllCustomers, selectedCustomer} = useCustomerContext();
+    const {selectedOrder, clearOrders} = useOrderContext();
+    const {clearAppointments} = useAppointmentContext();
 
+    useEffect(()=>{
+        getAllCustomers();
+    },[])
 
     const handleSubmit = () => {
-        // const searchObj = {
-        //     "firstName": firstName,
-        //     "lastName": lastName,
-        //     "phoneNumber": phoneNumber,
-        //     "email": email
-        // }
         let strArray = [];
         if (firstName !== "") strArray.push(`firstName=${firstName}`);
         if (lastName !== "") strArray.push(`lastName=${lastName}`);
@@ -25,6 +28,9 @@ export const AdminCustomerPage = () => {
         if (email !== "") strArray.push(`email=${email}`);
 
         customerSearch(strArray);
+        clearOrders();
+        clearAppointments();
+
     }
     return (
         <div className="customersPage">
@@ -33,8 +39,9 @@ export const AdminCustomerPage = () => {
             <input type="text" placeholder={"phone number"} onChange={(e) => setPhoneNumber(e.target.value)}/>
             <input type="text" placeholder={"email"} onChange={(e) => setEmail(e.target.value)}/>
             <button onClick={() => handleSubmit()}>SEARCH</button>
-            <CustomerTable className="customerTable"/>
-
+            <CustomerTable customerPrimary className="customerTable" />
+            <OrderTable  className={"orderTable"} profileID={selectedCustomer && selectedCustomer.profileID} customerName={selectedCustomer && selectedCustomer.firstName}/>
+            <AppointmentTable  className={"appointmentTable"} profileID={selectedOrder && selectedOrder.orderID} invoiceNumber={selectedOrder && selectedOrder.invoiceNumber}/>
 
 
             <div className="ordersTable"></div>

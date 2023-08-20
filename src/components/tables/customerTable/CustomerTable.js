@@ -7,7 +7,8 @@ import {OrderTable} from "../orderTable/OrderTable";
 import {useOrderContext} from "../../../context/OrderContext";
 import '../tableStyles.css';
 import {AppointmentTable} from "../appointmentTable/AppointmentTable";
-export const CustomerTable = () => {
+export const CustomerTable = ({customerPrimary}) => {
+    console.log(customerPrimary);
     const {customers, selectedCustomer, setSelected} = useCustomerContext();
     const {getOrdersByProfileID, selectedOrder} = useOrderContext();
     const formattedData = [];
@@ -51,7 +52,7 @@ export const CustomerTable = () => {
     }, []);
     return (
         <div>
-            <h2>Customers</h2>
+            <h2>{customerPrimary  ? `Customers` : 'Associated Customer'}</h2>
             <table {...getTableProps}>
                 <thead>
                 {
@@ -91,8 +92,8 @@ export const CustomerTable = () => {
                 </tbody>
             </table>
             <button>Update</button>
-            <OrderTable primary={false} profileID={selectedCustomer && selectedCustomer.profileID} customerName={selectedCustomer && selectedCustomer.firstName}/>
-            <AppointmentTable primary={false} profileID={selectedOrder && selectedOrder.orderID} invoiceNumber={selectedOrder && selectedOrder.invoiceNumber}/>
+            <button>New Customer</button>
+
         </div>
 
     )

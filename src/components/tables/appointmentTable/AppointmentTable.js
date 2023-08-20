@@ -6,7 +6,7 @@ import {uuid} from "uuidv4";
 import {useOrderContext} from "../../../context/OrderContext";
 import {useAppointmentContext} from "../../../context/AppointmentContext";
 
-export const AppointmentTable = ({primary, invoiceNumber}) => {
+export const AppointmentTable = ({appointmentPrimary, invoiceNumber}) => {
     const {appointments} = useAppointmentContext();
 
     const columns = useMemo(() => COLUMNS, []);
@@ -21,7 +21,7 @@ export const AppointmentTable = ({primary, invoiceNumber}) => {
 
     return (
         <div>
-            <h2>{primary === false && invoiceNumber ? `Appointments for order #${invoiceNumber}` : "Appointments"}</h2>
+            <h2>{appointmentPrimary ? "Appointments" : "Associated Appointments"}</h2>
             <table {...getTableProps}>
                 <thead>
                 {
@@ -60,6 +60,7 @@ export const AppointmentTable = ({primary, invoiceNumber}) => {
                 </tbody>
             </table>
             <button>Update</button>
+            <button>Schedule Appointment</button>
         </div>
 
     )

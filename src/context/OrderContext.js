@@ -6,7 +6,7 @@ import {request, requestWithToken} from "../axios";
 import {ACTIONS, orderReducer} from "../reducers/OrderReducer";
 import {useAuthContext} from "./AuthContext";
 
-const {GET_ORDERS, SELECT_ORDER, SEARCH_ERROR} = ACTIONS;
+const {GET_ORDERS, SELECT_ORDER, SEARCH_ERROR,CLEAR_ORDERS} = ACTIONS;
 
 export const OrderContext = createContext('');
 
@@ -86,6 +86,12 @@ export const OrderProvider = ({children}) => {
         return true;
 
     }
+    const clearOrders = ()=>{
+        dispatch({
+            type: CLEAR_ORDERS,
+            payload: null
+        })
+    }
     // const refresh = (email) => {
     //     let encoded = encodeURIComponent(`${email}`);
     //     console.log(encoded);
@@ -109,7 +115,8 @@ export const OrderProvider = ({children}) => {
         <OrderContext.Provider value={{
             ...state,
             getOrdersByProfileID: getOrdersByProfileID,
-            setSelected: setSelected
+            setSelected: setSelected,
+            clearOrders: clearOrders
         }}>
             {children}
         </OrderContext.Provider>

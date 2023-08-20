@@ -5,8 +5,8 @@ import {uuid} from "uuidv4";
 import {useOrderContext} from "../../../context/OrderContext";
 import {useAppointmentContext} from "../../../context/AppointmentContext";
 
-export const OrderTable = ({primary, customerName}) => {
-    console.log(primary);
+export const OrderTable = ({customerPrimary, orderPrimary, AppointmentPrimary, customerName}) => {
+
     const {orders, setSelected, selectedOrder} = useOrderContext();
     console.log(orders);
     const {getAppointmentsByOrderID} = useAppointmentContext();
@@ -28,9 +28,10 @@ export const OrderTable = ({primary, customerName}) => {
         }
     }
 
+
     return (
         <div>
-            <h2>{primary === false && customerName ? `${customerName}'s Orders` : "Orders"}</h2>
+            <h2>{orderPrimary ? "Orders" : "Associated Orders" }</h2>
             <table {...getTableProps}>
                 <thead>
                 {
@@ -69,6 +70,7 @@ export const OrderTable = ({primary, customerName}) => {
                 </tbody>
             </table>
             <button>Update</button>
+            <button>Create Order</button>
         </div>
 
     )
