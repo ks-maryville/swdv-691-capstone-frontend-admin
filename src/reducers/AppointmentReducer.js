@@ -1,30 +1,28 @@
 export const ACTIONS = {
-    GET_ORDERS: "get_orders",
-    SELECT_ORDER: "select_order",
+    GET_APPOINTMENTS: "get_appointments",
+    SELECT_APPOINTMENT: "select_appointment",
     SEARCH_ERROR: "search_error"
 }
 
-export const orderReducer = (state, action) => {
+export const appointmentReducer = (state, action) => {
     switch (action.type) {
-        case "get_orders":
+        case "get_appointments":
             return {
                 ...state,
-                orders: action.payload.data
+                appointments: action.payload.data
             }
         case "search_error":
             return {
                 ...state,
                 message: action.payload.message
             }
-        case "select_order":
+        case "select_appointment":
+            console.log(action.payload);
             return {
                 ...state,
-                selectedOrder: action.payload.data
+                selectedAppointment: action.payload.data
             }
-        // case "get_associated_appointments":
-        //     return {
-        //         associatedAppointments: action.payload.data
-        //     }
+
         // case "logout_user":
         //     return {
         //         authenticated: false,

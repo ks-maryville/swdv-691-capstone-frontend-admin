@@ -3,17 +3,17 @@ import axios from "axios";
 
 
 import {request, requestWithToken} from "../axios";
-import {ACTIONS, orderReducer} from "../reducers/OrderReducer";
+import {ACTIONS, appointmentReducer} from "../reducers/AppointmentReducer";
 import {useAuthContext} from "./AuthContext";
 
-const {GET_ORDERS, SELECT_ORDER, SEARCH_ERROR} = ACTIONS;
+const {GET_APPOINTMENTS, SELECT_APPOINTMENT, SEARCH_ERROR} = ACTIONS;
 
-export const OrderContext = createContext('');
+export const AppointmentContext = createContext('');
 
-export const OrderProvider = ({children}) => {
-    const [state, dispatch] = useReducer(orderReducer, {
-        orders: [],
-        selectedOrder: {},
+export const AppointmentProvider = ({children}) => {
+    const [state, dispatch] = useReducer(appointmentReducer, {
+        appointments: [],
+        selectedAppointment: {},
         message: []
     })
     const {token} = useAuthContext();
@@ -62,28 +62,26 @@ export const OrderProvider = ({children}) => {
             return false;
         }
         dispatch({
-            type: SELECT_ORDER,
+            type: SELECT_APPOINTMENT,
             payload: found.data
         })
         return true;
     }
-    const getOrdersByProfileID = async (profileID) => {
-        console.log("GET ORDERS BY PROFILE ID FIRING NOW")
-        let found = await requestWithToken(token).get(`/order/profile/${profileID}`);
+    const getAppointmentsByOrderID = async (orderID) => {
+        let found = await requestWithToken(token).get(`/appointment/order/${orderID}`);
 
         if (found.data.success === false) {
-             dispatch({
+            return dispatch({
                 type: SEARCH_ERROR,
                 payload: found.data
             })
-            return false;
         }
 
         dispatch({
-            type: GET_ORDERS,
+            type: GET_APPOINTMENTS,
             payload: found.data
         })
-        return true;
+
 
     }
     // const refresh = (email) => {
@@ -106,16 +104,16 @@ export const OrderProvider = ({children}) => {
 
 
     return (
-        <OrderContext.Provider value={{
+        <AppointmentContext.Provider value={{
             ...state,
-            getOrdersByProfileID: getOrdersByProfileID,
+            getAppointmentsByOrderID: getAppointmentsByOrderID,
             setSelected: setSelected
         }}>
             {children}
-        </OrderContext.Provider>
+        </AppointmentContext.Provider>
     )
 }
 
-export const useOrderContext = () => {
-    return useContext(OrderContext);
+export const useAppointmentContext = () => {
+    return useContext(AppointmentContext);
 }

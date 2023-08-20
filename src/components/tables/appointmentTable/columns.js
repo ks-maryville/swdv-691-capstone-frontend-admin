@@ -1,20 +1,26 @@
 export const COLUMNS = [
     {
-        Header: "id"
+        Header: "id",
+        accessor: "appointmentID"
     },
     {
-        Header: "date"
+        Header: "date",
+        accessor: "date"
     },
     {
-        Header: "status"
+        Header: "status",
+        accessor: "status"
     },
     {
-        Header: "notes"
+        Header: "notes",
+        accessor: "notes"
     },
     {
-        Header: "date created"
+        Header: "date created",
+        accessor: "date_created"
     },
     {
-        Header: "date updated"
+        Header: "date updated",
+        accessor: "date_updated"
     }
 ]

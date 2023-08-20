@@ -7,6 +7,7 @@ import {AuthProvider} from "./context/AuthContext";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import {CustomerProvider} from "./context/CustomerContext";
 import {OrderProvider} from "./context/OrderContext";
+import {AppointmentProvider} from "./context/AppointmentContext";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -15,9 +16,11 @@ root.render(
             <AuthProvider>
                 <CustomerProvider>
                     <OrderProvider>
-                        <Routes>
-                            <Route path={"/*"} element={<App/>}/>
-                        </Routes>
+                        <AppointmentProvider>
+                            <Routes>
+                                <Route path={"/*"} element={<App/>}/>
+                            </Routes>
+                        </AppointmentProvider>
                     </OrderProvider>
                 </CustomerProvider>
             </AuthProvider>

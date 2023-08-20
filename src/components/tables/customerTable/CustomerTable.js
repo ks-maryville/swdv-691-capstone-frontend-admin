@@ -5,10 +5,11 @@ import {useEffect, useMemo} from "react";
 import {uuid} from "uuidv4";
 import {OrderTable} from "../orderTable/OrderTable";
 import {useOrderContext} from "../../../context/OrderContext";
-
+import '../tableStyles.css';
+import {AppointmentTable} from "../appointmentTable/AppointmentTable";
 export const CustomerTable = () => {
     const {customers, selectedCustomer, setSelected} = useCustomerContext();
-    const {getOrdersByProfileID} = useOrderContext();
+    const {getOrdersByProfileID, selectedOrder} = useOrderContext();
     const formattedData = [];
     if (customers !== null) {
         console.log("CUSTOMERS IS NOT NULL", customers);
@@ -50,6 +51,7 @@ export const CustomerTable = () => {
     }, []);
     return (
         <div>
+            <h2>Customers</h2>
             <table {...getTableProps}>
                 <thead>
                 {
@@ -88,7 +90,9 @@ export const CustomerTable = () => {
                 }
                 </tbody>
             </table>
-            <OrderTable primary={false} profileID={selectedCustomer && selectedCustomer.profileID}/>
+            <button>Update</button>
+            <OrderTable primary={false} profileID={selectedCustomer && selectedCustomer.profileID} customerName={selectedCustomer && selectedCustomer.firstName}/>
+            <AppointmentTable primary={false} profileID={selectedOrder && selectedOrder.orderID} invoiceNumber={selectedOrder && selectedOrder.invoiceNumber}/>
         </div>
 
     )

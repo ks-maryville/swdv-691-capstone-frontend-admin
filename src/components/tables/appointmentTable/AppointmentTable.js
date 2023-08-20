@@ -1,18 +1,16 @@
 import {useTable} from 'react-table';
 import {COLUMNS} from "./columns";
+import {useCustomerContext} from "../../../context/CustomerContext";
 import {useMemo} from "react";
 import {uuid} from "uuidv4";
 import {useOrderContext} from "../../../context/OrderContext";
 import {useAppointmentContext} from "../../../context/AppointmentContext";
 
-export const OrderTable = ({primary, customerName}) => {
-    console.log(primary);
-    const {orders, setSelected, selectedOrder} = useOrderContext();
-    console.log(orders);
-    const {getAppointmentsByOrderID} = useAppointmentContext();
+export const AppointmentTable = ({primary, invoiceNumber}) => {
+    const {appointments} = useAppointmentContext();
 
     const columns = useMemo(() => COLUMNS, []);
-    const data = useMemo(() => orders, [orders]);
+    const data = useMemo(() => appointments, [appointments]);
 
     const table = useTable({
         columns: columns,
@@ -21,16 +19,9 @@ export const OrderTable = ({primary, customerName}) => {
 
     const {getTableProps, getTableBodyProps, headerGroups, rows, prepareRow} = table;
 
-    const handleSelect = async (orderID) => {
-        let selectedOrder = await setSelected(orderID);
-        if (selectedOrder === true) {
-            getAppointmentsByOrderID(orderID);
-        }
-    }
-
     return (
         <div>
-            <h2>{primary === false && customerName ? `${customerName}'s Orders` : "Orders"}</h2>
+            <h2>{primary === false && invoiceNumber ? `Appointments for order #${invoiceNumber}` : "Appointments"}</h2>
             <table {...getTableProps}>
                 <thead>
                 {
@@ -55,7 +46,7 @@ export const OrderTable = ({primary, customerName}) => {
                         console.log(row);
                         prepareRow(row);
                         return (
-                            <tr {...row.getRowProps()} key={uuid + row} onClick={()=>handleSelect(row.original.orderID)}>
+                            <tr {...row.getRowProps()} key={uuid + row}>
                                 {
                                     row.cells.map((cell) => {
 
