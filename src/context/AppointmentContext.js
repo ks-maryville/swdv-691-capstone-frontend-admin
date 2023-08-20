@@ -6,7 +6,7 @@ import {request, requestWithToken} from "../axios";
 import {ACTIONS, appointmentReducer} from "../reducers/AppointmentReducer";
 import {useAuthContext} from "./AuthContext";
 
-const {GET_APPOINTMENTS, SELECT_APPOINTMENT, SEARCH_ERROR} = ACTIONS;
+const {GET_APPOINTMENTS, SELECT_APPOINTMENT, SEARCH_ERROR,CLEAR_APPOINTMENTS} = ACTIONS;
 
 export const AppointmentContext = createContext('');
 
@@ -101,13 +101,19 @@ export const AppointmentProvider = ({children}) => {
     //         })
     //
     // }
-
+    const clearAppointments = ()=>{
+        dispatch({
+            type: CLEAR_APPOINTMENTS,
+            payload: null
+        })
+    }
 
     return (
         <AppointmentContext.Provider value={{
             ...state,
             getAppointmentsByOrderID: getAppointmentsByOrderID,
-            setSelected: setSelected
+            setSelected: setSelected,
+            clearAppointments: clearAppointments
         }}>
             {children}
         </AppointmentContext.Provider>

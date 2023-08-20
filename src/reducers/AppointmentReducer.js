@@ -1,6 +1,7 @@
 export const ACTIONS = {
     GET_APPOINTMENTS: "get_appointments",
     SELECT_APPOINTMENT: "select_appointment",
+    CLEAR_APPOINTMENTS: "clear_appointments",
     SEARCH_ERROR: "search_error"
 }
 
@@ -22,7 +23,12 @@ export const appointmentReducer = (state, action) => {
                 ...state,
                 selectedAppointment: action.payload.data
             }
-
+        case "clear_appointments":
+            return {
+                ...state,
+                selectedAppointment: {},
+                appointments: []
+            }
         // case "logout_user":
         //     return {
         //         authenticated: false,

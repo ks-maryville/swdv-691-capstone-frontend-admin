@@ -5,8 +5,10 @@ import axios from "axios";
 import {request, requestWithToken} from "../axios";
 import {ACTIONS, customerReducer} from "../reducers/CustomerReducer";
 import {useAuthContext} from "./AuthContext";
+import {useOrderContext} from "./OrderContext";
+import {useAppointmentContext} from "./AppointmentContext";
 
-const {GET_ASSOCIATED_APPOINTMENTS, GET_ASSOCIATED_ORDERS, GET_ALL_CUSTOMERS, SEARCH_ERROR, SELECT_CUSTOMER} = ACTIONS;
+const {CLEAR_CUSTOMERS, GET_ASSOCIATED_ORDERS, GET_ALL_CUSTOMERS, SEARCH_ERROR, SELECT_CUSTOMER} = ACTIONS;
 
 export const CustomerContext = createContext('');
 
@@ -21,7 +23,6 @@ export const CustomerProvider = ({children}) => {
     const {token} = useAuthContext();
     const client = process.env.REACT_APP_DEFAULT_CLIENT_URL;
     const server = process.env.REACT_APP_DEFAULT_SERVER_URL;
-
 
     // const login = async (data) => {
     //     console.log(client, server);
@@ -80,7 +81,6 @@ export const CustomerProvider = ({children}) => {
             }
         }
 
-        console.log(queryString);
         let found = await requestWithToken(token).get(`/profile/search${queryString}`)
 
         if (found.data.success === false) {
@@ -89,6 +89,8 @@ export const CustomerProvider = ({children}) => {
                 payload: found.data
             })
         }
+
+
         dispatch({
             type: GET_ALL_CUSTOMERS,
             payload: found.data
@@ -96,12 +98,18 @@ export const CustomerProvider = ({children}) => {
         return true;
     }
 
-    const setSelected = async (profileID) =>{
+    const clearCustomers = () => {
+        dispatch({
+            type: CLEAR_CUSTOMERS,
+            payload: null
+        })
+    }
+    const setSelected = async (profileID) => {
         console.log("SET SELECTED FIRING, PROFILE ID: " + profileID);
         let found = await requestWithToken(token).get(`/profile/${profileID}`);
 
         console.log(found.data);
-        if(found.data.success === false){
+        if (found.data.success === false) {
             dispatch({
                 type: SEARCH_ERROR,
                 payload: found.data
@@ -130,8 +138,21 @@ export const CustomerProvider = ({children}) => {
             type: GET_ASSOCIATED_ORDERS,
             payload: found.data
         })
+    }
 
+    const getAllCustomers = async () => {
+        let found = await requestWithToken(token).get(`/profile`);
 
+        if (found.data.success === false) {
+            return dispatch({
+                type: SEARCH_ERROR,
+                payload: found.data
+            })
+        }
+        dispatch({
+            type: GET_ALL_CUSTOMERS,
+            payload: found.data
+        })
     }
     // const refresh = (email) => {
     //     let encoded = encodeURIComponent(`${email}`);
@@ -156,7 +177,9 @@ export const CustomerProvider = ({children}) => {
         <CustomerContext.Provider value={{
             ...state,
             customerSearch: customerSearch,
-            setSelected: setSelected
+            setSelected: setSelected,
+            getAllCustomers: getAllCustomers,
+            clearCustomers: clearCustomers
         }}>
             {children}
         </CustomerContext.Provider>
