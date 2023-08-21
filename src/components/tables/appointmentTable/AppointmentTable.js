@@ -21,7 +21,7 @@ export const AppointmentTable = ({appointmentPrimary, invoiceNumber}) => {
 
     const handleSelect = async (appointmentID) => {
 
-        // fix issue with selected appointment not available.
+        // fixed issue with selected appointment not available.
         // made selectAppointment return the found data as well as set it to appointment context so data
         // is made available immediately.
         // Working for now. Revisiting later as it could possibly cause unwanted side effects.
