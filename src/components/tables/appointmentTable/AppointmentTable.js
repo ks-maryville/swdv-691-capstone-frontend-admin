@@ -7,7 +7,7 @@ import {useOrderContext} from "../../../context/OrderContext";
 import {useAppointmentContext} from "../../../context/AppointmentContext";
 
 export const AppointmentTable = ({appointmentPrimary, invoiceNumber}) => {
-    const {appointments, setSelected} = useAppointmentContext();
+    const {appointments, setSelected, selectedAppointment} = useAppointmentContext();
     const {getOrderByID} = useOrderContext();
     const {getCustomerByID} = useCustomerContext();
 
@@ -20,8 +20,15 @@ export const AppointmentTable = ({appointmentPrimary, invoiceNumber}) => {
     })
 
     const handleSelect = async (appointmentID) => {
+
+        // fix issue with selected appointment not available.
+        // made selectAppointment return the found data as well as set it to appointment context so data
+        // is made available immediately.
+        // Working for now. Revisiting later as it could possibly cause unwanted side effects.
         let selectAppointment = await setSelected(appointmentID);
-        if (selectAppointment === true) {
+        console.log(selectAppointment);
+        //
+        if (selectAppointment !== null && Object.keys(selectAppointment).length > 0) {
 
             if (appointmentPrimary) {
                 getOrderByID(selectAppointment.orderID);
@@ -37,6 +44,8 @@ export const AppointmentTable = ({appointmentPrimary, invoiceNumber}) => {
         *       get the customer associated with the appointment
         * */
     }
+
+
     const {getTableProps, getTableBodyProps, headerGroups, rows, prepareRow} = table;
 
     return (
@@ -66,7 +75,8 @@ export const AppointmentTable = ({appointmentPrimary, invoiceNumber}) => {
                         // console.log(row);
                         prepareRow(row);
                         return (
-                            <tr {...row.getRowProps()} key={uuid + row} onClick={()=>handleSelect(row.original.appointmentID)}>
+                            <tr {...row.getRowProps()} key={uuid + row}
+                                onClick={() => handleSelect(row.original.appointmentID)}>
                                 {
                                     row.cells.map((cell) => {
 
