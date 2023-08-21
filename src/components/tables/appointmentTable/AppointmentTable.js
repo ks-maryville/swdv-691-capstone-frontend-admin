@@ -7,7 +7,9 @@ import {useOrderContext} from "../../../context/OrderContext";
 import {useAppointmentContext} from "../../../context/AppointmentContext";
 
 export const AppointmentTable = ({appointmentPrimary, invoiceNumber}) => {
-    const {appointments} = useAppointmentContext();
+    const {appointments, setSelected} = useAppointmentContext();
+    const {getOrderByID} = useOrderContext();
+    const {getCustomerByID} = useCustomerContext();
 
     const columns = useMemo(() => COLUMNS, []);
     const data = useMemo(() => appointments, [appointments]);
@@ -17,6 +19,24 @@ export const AppointmentTable = ({appointmentPrimary, invoiceNumber}) => {
         data: data
     })
 
+    const handleSelect = async (appointmentID) => {
+        let selectAppointment = await setSelected(appointmentID);
+        if (selectAppointment === true) {
+
+            if (appointmentPrimary) {
+                getOrderByID(selectAppointment.orderID);
+                getCustomerByID(selectAppointment.profileID);
+            }
+
+        }
+
+        /*
+        *
+        *If the appointment table is primary
+        *       get all orders associated with the apointments
+        *       get the customer associated with the appointment
+        * */
+    }
     const {getTableProps, getTableBodyProps, headerGroups, rows, prepareRow} = table;
 
     return (
@@ -43,10 +63,10 @@ export const AppointmentTable = ({appointmentPrimary, invoiceNumber}) => {
 
                 {
                     rows.map((row) => {
-                        console.log(row);
+                        // console.log(row);
                         prepareRow(row);
                         return (
-                            <tr {...row.getRowProps()} key={uuid + row}>
+                            <tr {...row.getRowProps()} key={uuid + row} onClick={()=>handleSelect(row.original.appointmentID)}>
                                 {
                                     row.cells.map((cell) => {
 

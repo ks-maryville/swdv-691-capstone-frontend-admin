@@ -7,11 +7,15 @@ import {OrderTable} from "../orderTable/OrderTable";
 import {useOrderContext} from "../../../context/OrderContext";
 import '../tableStyles.css';
 import {AppointmentTable} from "../appointmentTable/AppointmentTable";
+
 export const CustomerTable = ({customerPrimary}) => {
     console.log(customerPrimary);
     const {customers, selectedCustomer, setSelected} = useCustomerContext();
+
     const {getOrdersByProfileID, selectedOrder} = useOrderContext();
+
     const formattedData = [];
+
     if (customers !== null) {
         console.log("CUSTOMERS IS NOT NULL", customers);
         customers.forEach(customer => {
@@ -31,8 +35,11 @@ export const CustomerTable = ({customerPrimary}) => {
         })
     }
     console.log(formattedData);
+
     const columns = useMemo(() => COLUMNS, []);
+
     const data = useMemo(() => formattedData, [formattedData]);
+
 
     const table = useTable({
         columns: columns,
@@ -44,15 +51,27 @@ export const CustomerTable = ({customerPrimary}) => {
     const handleSelect = async (profileID) => {
         let selectCustomer = await setSelected(profileID);
         if (selectCustomer === true) {
-            getOrdersByProfileID(profileID);
+
+            if (customerPrimary) {
+                getOrdersByProfileID(profileID);
+            }
         }
+
+        /*
+        *
+        * if the customer table is primary
+        *       get orders by the profile id of the selected customer
+        *
+        * if the customer is NOT primary
+        *       simply set the selected customer and nothing else.
+        * */
     }
     useEffect(() => {
 
     }, []);
     return (
         <div>
-            <h2>{customerPrimary  ? `Customers` : 'Associated Customer'}</h2>
+            <h2>{customerPrimary ? `Customers` : 'Associated Customer'}</h2>
             <table {...getTableProps}>
                 <thead>
                 {
@@ -93,6 +112,7 @@ export const CustomerTable = ({customerPrimary}) => {
             </table>
             <button>Update</button>
             <button>New Customer</button>
+
 
         </div>
 

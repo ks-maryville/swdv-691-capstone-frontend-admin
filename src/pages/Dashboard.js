@@ -31,6 +31,7 @@ export function Dashboard() {
         <div>
            <button onClick={()=>handleLogout()}>Logout</button>
             <Link to={"/customers"}>Customers</Link>
+            <Link to={"/orders"}>Orders</Link>
         </div>
     )
 }

@@ -10,14 +10,9 @@ import {Protected} from "./Protected";
 import {DashboardLayout} from "./layouts/DashboardLayout";
 import {Dashboard} from "./pages/Dashboard";
 import {AdminCustomerPage} from "./pages/AdminCustomerPage";
+import {AdminOrderPage} from "./pages/AdminOrderPage";
 
 
-
-class AdminOrderPage extends Component {
-    render() {
-        return null;
-    }
-}
 
 class AdminAppointmentsPage extends Component {
     render() {

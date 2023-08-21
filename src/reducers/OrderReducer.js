@@ -2,7 +2,8 @@ export const ACTIONS = {
     GET_ORDERS: "get_orders",
     SELECT_ORDER: "select_order",
     CLEAR_ORDERS: "clear_orders",
-    SEARCH_ERROR: "search_error"
+    SEARCH_ERROR: "search_error",
+    GET_ORDER_BY_ID: "get_order_by_id"
 
 }
 
@@ -28,6 +29,11 @@ export const orderReducer = (state, action) => {
                 ...state,
                 selectedOrders: {},
                 orders: []
+            }
+        case "get_order_by_id":
+            return {
+                ...state,
+                orders: [action.payload.data]
             }
         // case "get_associated_appointments":
         //     return {

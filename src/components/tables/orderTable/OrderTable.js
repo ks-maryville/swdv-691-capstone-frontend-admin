@@ -4,13 +4,14 @@ import {useMemo} from "react";
 import {uuid} from "uuidv4";
 import {useOrderContext} from "../../../context/OrderContext";
 import {useAppointmentContext} from "../../../context/AppointmentContext";
+import {useCustomerContext} from "../../../context/CustomerContext";
 
-export const OrderTable = ({customerPrimary, orderPrimary, AppointmentPrimary, customerName}) => {
+export const OrderTable = ({customerPrimary, orderPrimary, appointmentPrimary, customerName}) => {
 
     const {orders, setSelected, selectedOrder} = useOrderContext();
-    console.log(orders);
-    const {getAppointmentsByOrderID} = useAppointmentContext();
 
+    const {getAppointmentsByOrderID} = useAppointmentContext();
+    const {getCustomerByID} = useCustomerContext();
     const columns = useMemo(() => COLUMNS, []);
     const data = useMemo(() => orders, [orders]);
 
@@ -22,10 +23,27 @@ export const OrderTable = ({customerPrimary, orderPrimary, AppointmentPrimary, c
     const {getTableProps, getTableBodyProps, headerGroups, rows, prepareRow} = table;
 
     const handleSelect = async (orderID) => {
-        let selectedOrder = await setSelected(orderID);
-        if (selectedOrder === true) {
+        let selectOrder = await setSelected(orderID);
+        if (selectOrder === true) {
             getAppointmentsByOrderID(orderID);
+
+            if(orderPrimary){
+                console.log(selectedOrder.profileID);
+                getCustomerByID(selectedOrder.profileID);
+            }
         }
+
+        /*
+        *
+        * if the order table is primary
+        *   get appointments using the selected order ID
+        *   also get the customer associated with the the order
+        *
+        * if the appointment table is primary
+        *   set the selected order
+        * */
+
+
     }
 
 
@@ -53,7 +71,7 @@ export const OrderTable = ({customerPrimary, orderPrimary, AppointmentPrimary, c
 
                 {
                     rows.map((row) => {
-                        console.log(row);
+                        // console.log(row);
                         prepareRow(row);
                         return (
                             <tr {...row.getRowProps()} key={uuid + row} onClick={()=>handleSelect(row.original.orderID)}>

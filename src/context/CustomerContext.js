@@ -8,7 +8,14 @@ import {useAuthContext} from "./AuthContext";
 import {useOrderContext} from "./OrderContext";
 import {useAppointmentContext} from "./AppointmentContext";
 
-const {CLEAR_CUSTOMERS, GET_ASSOCIATED_ORDERS, GET_ALL_CUSTOMERS, SEARCH_ERROR, SELECT_CUSTOMER} = ACTIONS;
+const {
+    GET_CUSTOMER_BY_ID,
+    CLEAR_CUSTOMERS,
+    GET_ASSOCIATED_ORDERS,
+    GET_ALL_CUSTOMERS,
+    SEARCH_ERROR,
+    SELECT_CUSTOMER
+} = ACTIONS;
 
 export const CustomerContext = createContext('');
 
@@ -154,6 +161,22 @@ export const CustomerProvider = ({children}) => {
             payload: found.data
         })
     }
+
+    const getCustomerByID = async (profileID) => {
+        console.log("profile id from get customer by id, " + 1)
+        let found = await requestWithToken(token).get(`profile/${profileID}`);
+
+        if (found.data.success === false) {
+            return dispatch({
+                type: SEARCH_ERROR,
+                payload: found.data
+            })
+        }
+        dispatch({
+            type: GET_CUSTOMER_BY_ID,
+            payload: found.data
+        })
+    }
     // const refresh = (email) => {
     //     let encoded = encodeURIComponent(`${email}`);
     //     console.log(encoded);
@@ -179,7 +202,8 @@ export const CustomerProvider = ({children}) => {
             customerSearch: customerSearch,
             setSelected: setSelected,
             getAllCustomers: getAllCustomers,
-            clearCustomers: clearCustomers
+            clearCustomers: clearCustomers,
+            getCustomerByID: getCustomerByID
         }}>
             {children}
         </CustomerContext.Provider>

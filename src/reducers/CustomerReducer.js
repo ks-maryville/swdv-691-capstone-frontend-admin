@@ -4,7 +4,8 @@ export const ACTIONS = {
     GET_ASSOCIATED_ORDERS: "get_associated_orders",
     GET_ASSOCIATED_APPOINTMENTS: "get_associated_appointments",
     CLEAR_CUSTOMERS: 'clear_customers',
-    SEARCH_ERROR: "search_error"
+    SEARCH_ERROR: "search_error",
+    GET_CUSTOMER_BY_ID: "get_customer_by_id"
 }
 
 export const customerReducer = (state, action) => {
@@ -31,7 +32,11 @@ export const customerReducer = (state, action) => {
                 selectedCustomer: {},
                 customers: []
             }
-
+        case "get_customer_by_id":
+            return {
+                ...state,
+                customers: [action.payload.data]
+            }
         // case "logout_user":
         //     return {
         //         authenticated: false,
