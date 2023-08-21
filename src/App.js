@@ -11,14 +11,10 @@ import {DashboardLayout} from "./layouts/DashboardLayout";
 import {Dashboard} from "./pages/Dashboard";
 import {AdminCustomerPage} from "./pages/AdminCustomerPage";
 import {AdminOrderPage} from "./pages/AdminOrderPage";
+import {AdminAppointmentPage} from "./pages/AdminAppointmentPage";
 
 
 
-class AdminAppointmentsPage extends Component {
-    render() {
-        return null;
-    }
-}
 
 
 class Unauthorized extends Component {
@@ -50,7 +46,7 @@ function App() {
                     <Route path={"dashboard"} element={<Dashboard/>}/>
                     <Route path={"customers"} element={<AdminCustomerPage/>}></Route>
                     <Route path={"orders"} element={<AdminOrderPage/>}/>
-                    <Route path={"appointments"} element={<AdminAppointmentsPage/>}/>
+                    <Route path={"appointments"} element={<AdminAppointmentPage/>}/>
                 </Route>
 
 

@@ -86,7 +86,7 @@ export const OrderProvider = ({children}) => {
 
     }
     const getOrderByID = async (orderID) => {
-        let found = await requestWithToken(token).get(`/${orderID}`);
+        let found = await requestWithToken(token).get(`/order/${orderID}`);
 
         if (found.data.success === false) {
             return dispatch({

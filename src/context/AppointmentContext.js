@@ -51,8 +51,9 @@ export const AppointmentProvider = ({children}) => {
     //     return true;
     // }
     const setSelected = async (orderID) =>{
+        console.log("set selected is running");
 
-        let found = await requestWithToken(token).get(`/order/${orderID}`);
+        let found = await requestWithToken(token).get(`appointment/${orderID}`);
 
         if(found.data.success === false){
             dispatch({
@@ -65,7 +66,7 @@ export const AppointmentProvider = ({children}) => {
             type: SELECT_APPOINTMENT,
             payload: found.data
         })
-        return true;
+        return found.data.data;
     }
     const getAppointmentsByOrderID = async (orderID) => {
         let found = await requestWithToken(token).get(`/appointment/order/${orderID}`);
@@ -82,6 +83,22 @@ export const AppointmentProvider = ({children}) => {
             payload: found.data
         })
 
+    }
+
+    const getAllAppointments = async ()=>{
+        let found = await requestWithToken(token).get(`appointment`);
+
+        if(found.data.success === false){
+            return dispatch({
+                type: SEARCH_ERROR,
+                payload: found.data
+            })
+        }
+
+        dispatch({
+            type: GET_APPOINTMENTS,
+            payload: found.data
+        })
 
     }
     // const refresh = (email) => {
@@ -113,7 +130,8 @@ export const AppointmentProvider = ({children}) => {
             ...state,
             getAppointmentsByOrderID: getAppointmentsByOrderID,
             setSelected: setSelected,
-            clearAppointments: clearAppointments
+            clearAppointments: clearAppointments,
+            getAllAppointments: getAllAppointments
         }}>
             {children}
         </AppointmentContext.Provider>
