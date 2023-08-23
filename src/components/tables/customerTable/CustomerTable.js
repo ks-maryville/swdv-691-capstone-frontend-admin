@@ -148,7 +148,7 @@ export const CustomerTable = ({customerPrimary}) => {
             <button onClick={() => setCreateOpen(!createOpen)}>New Customer</button>
             {createOpen && (
                 <>
-                    <div className={"background"} onClick={() => setCreateOpen()}></div>
+                    <div className={"background"} onClick={() => setCreateOpen(!createOpen)}></div>
 
                     <CreateCustomerModal createOpen={createOpen} setCreateOpen={setCreateOpen}/>
                 </>
