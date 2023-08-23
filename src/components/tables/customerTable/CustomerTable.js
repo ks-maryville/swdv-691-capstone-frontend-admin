@@ -22,7 +22,6 @@ export const CustomerTable = ({customerPrimary}) => {
     const [isSelected, setIsSelected] = useState(null);
     const [selectedElement, setSelectedElement] = useState(null);
 
-
     const [createOpen, setCreateOpen] = useState(false);
     const [updateOpen, setUpdateOpen] = useState(false);
 
@@ -43,13 +42,9 @@ export const CustomerTable = ({customerPrimary}) => {
                 state: customer.state,
                 zipCode: customer.zipCode,
                 phoneNumber: customer.phoneNumber,
-                phoneType: customer.phoneType,
-                // date_created: customer.date_created,
-                // date_updated: customer.date_created
+                phoneType: customer.phoneType
             }
-            // if (customer.address !== null) {
-            //     newCustomerObject.address = `${customer.address.address1} ${customer.address.address2} ${customer.address.city} , ${customer.address.state} ${customer.address.zipCode}`
-            // }
+
             formattedData.push(newCustomerObject);
         })
     }

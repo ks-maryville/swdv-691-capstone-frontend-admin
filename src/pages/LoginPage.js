@@ -5,11 +5,13 @@ import moment from "moment/moment";
 import './loginStyles.css';
 
 export function LoginPage() {
+    const navigate = useNavigate();
+
+
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loggedIn, setLoggedIn] = useState(false);
-    const {login, logout, token, authenticated, refresh, message} = useAuthContext();
-    const navigate = useNavigate();
+    const {login, logout, token, authenticated, refresh, message, } = useAuthContext();
 
     const handleSubmit = () => {
         let loginObject = {
@@ -61,21 +63,24 @@ export function LoginPage() {
         //     }
         // }
     }
-    useEffect(() => {
 
-    }, []);
+    useEffect(() => {
+        if(token !== null && token !== undefined && token !== ""){
+            navigate("/dashboard");
+        }
+    }, [token]);
 
 
     return (
         <main className={"loginPage"}>
             <div className="loginWrapper">
-                <p>John Doe Furniture Company</p>
-                <h2>John Doe Furniture Company</h2>
-                <input type="text" placeholder={"email"} onChange={(e) => setEmail(e.target.value)}/>
-                <input type="text" placeholder={"password"} onChange={(e) => setPassword(e.target.value)}/>
-                <button onClick={handleSubmit}>Login</button>
+                <h1 className={"h1"}>Admin Panel</h1>
+                <h2 className={"header"}>John Doe Furniture Company</h2>
+                <input className={"loginInput"} type="text" placeholder={"email"} onChange={(e) => setEmail(e.target.value)}/>
+                <input className={"loginInput"} type="text" placeholder={"password"} onChange={(e) => setPassword(e.target.value)}/>
+                <button className={"loginSubmit"} onClick={handleSubmit}>Login</button>
+                {Object.keys(message).length > 0 && <p className={"loginError"}>{message.authentication[0]}</p>}
             </div>
-            {Object.keys(message).length > 0 && <p>{message.authentication[0]}</p>}
         </main>
     )
 }

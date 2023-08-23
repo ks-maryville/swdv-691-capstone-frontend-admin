@@ -5,19 +5,21 @@ import {uuid} from "uuidv4";
 import {useOrderContext} from "../../../context/OrderContext";
 import {useAppointmentContext} from "../../../context/AppointmentContext";
 import {useCustomerContext} from "../../../context/CustomerContext";
+import {CreateOrderModal} from "../../Order/CreateOrderModal";
+import {UpdateOrderModal} from "../../Order/UpdateOrderModal";
+import {create} from "axios";
 
 export const OrderTable = ({customerPrimary, orderPrimary, appointmentPrimary, customerName}) => {
-
     const {orders, setSelected, selectedOrder} = useOrderContext();
-
-
     const {getAppointmentsByOrderID} = useAppointmentContext();
-
     const {getCustomerByID} = useCustomerContext();
 
-    const [isSelected, setIsSelected] = useState(null);
 
+    const [isSelected, setIsSelected] = useState(null);
     const [selectedElement, setSelectedElement] = useState(null);
+
+    const [createOpen, setCreateOpen] = useState(false);
+    const [updateOpen, setUpdateOpen] = useState(false);
 
     const columns = useMemo(() => COLUMNS, []);
 
@@ -105,8 +107,29 @@ export const OrderTable = ({customerPrimary, orderPrimary, appointmentPrimary, c
                 }
                 </tbody>
             </table>
-            <button>Update</button>
-            <button>Create Order</button>
+            <button onClick={JSON.stringify(selectedOrder) !== "{}" ? ()=>setUpdateOpen(!updateOpen) : null}>Update</button>
+            <button onClick={()=> setCreateOpen(!createOpen)}>Create Order</button>
+            {createOpen && (
+                <>
+                    <div className="background" onClick={() => setCreateOpen(!createOpen)}>
+
+                    </div>
+
+                    <CreateOrderModal createOpen={createOpen} setCreateOpen={setCreateOpen}/>
+                </>
+            )}
+            {JSON.stringify(selectedOrder) !== "{}" && updateOpen ? (
+                <>
+                    <div className="background" onClick={() => setUpdateOpen(!updateOpen)}>
+
+                    </div>
+
+                    <UpdateOrderModal/>
+
+                </>
+            ) : null
+
+            }
         </div>
 
     )

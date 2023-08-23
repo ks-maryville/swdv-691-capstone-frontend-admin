@@ -1,14 +1,17 @@
-p , h2{
+.subheader, .header ,.h1{
     color: yellow;
     text-align: left;
 }
+
+
 .loginPage {
     width: 100%;
     height: 100%;
     /*margin-top: 40px;*/
     background-color: #2E378F;
 }
-.loginWrapper{
+
+.loginWrapper {
     display: flex;
     /*align-items: center;*/
     flex-direction: column;
@@ -19,7 +22,7 @@ p , h2{
     /*background-color: green;*/
 }
 
-input {
+.loginInput {
     border: none;
     border: 1px solid #2E378F;
     border-radius: 5px;
@@ -29,7 +32,7 @@ input {
     width: 100%;
 }
 
-button {
+.loginSubmit {
     width: 60px;
     padding: 5px;
     margin-top: 10px;
@@ -38,5 +41,16 @@ button {
     border-radius: 5px;
     background-color: white;
     color: #2E378F;
+    font-weight: bold;
+    align-self: flex-end;
+}
+.loginSubmit:hover {
+    cursor: pointer;
+}
+
+.loginError {
+    margin-top: 5px;
+    color: rgba(255,0,0,0.5);
+    /*text-decoration: underline whitesmoke;*/
     font-weight: bold;
 }
