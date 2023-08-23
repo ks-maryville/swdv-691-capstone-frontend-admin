@@ -1,0 +1,42 @@
+p , h2{
+    color: yellow;
+    text-align: left;
+}
+.loginPage {
+    width: 100%;
+    height: 100%;
+    /*margin-top: 40px;*/
+    background-color: #2E378F;
+}
+.loginWrapper{
+    display: flex;
+    /*align-items: center;*/
+    flex-direction: column;
+    width: 50%;
+    margin: 0 auto;
+    padding-top: 25%;
+    /*padding: 10%;*/
+    /*background-color: green;*/
+}
+
+input {
+    border: none;
+    border: 1px solid #2E378F;
+    border-radius: 5px;
+    margin-top: 10px;
+    height: 25px;
+    padding-left: 10px;
+    width: 100%;
+}
+
+button {
+    width: 60px;
+    padding: 5px;
+    margin-top: 10px;
+    border: none;
+    /*border: 2px solid yellow;*/
+    border-radius: 5px;
+    background-color: white;
+    color: #2E378F;
+    font-weight: bold;
+}

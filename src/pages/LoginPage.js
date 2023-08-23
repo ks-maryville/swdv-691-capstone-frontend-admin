@@ -2,6 +2,7 @@ import {useEffect, useState} from "react";
 import {useAuthContext} from "../context/AuthContext";
 import {useNavigate} from "react-router-dom";
 import moment from "moment/moment";
+import './loginStyles.css';
 
 export function LoginPage() {
     const [email, setEmail] = useState("");
@@ -66,11 +67,15 @@ export function LoginPage() {
 
 
     return (
-        <div>
-            <input type="text" placeholder={"email"} onChange={(e) => setEmail(e.target.value)}/>
-            <input type="text" placeholder={"password"} onChange={(e) => setPassword(e.target.value)}/>
-            <button onClick={handleSubmit}>Login</button>
+        <main className={"loginPage"}>
+            <div className="loginWrapper">
+                <p>John Doe Furniture Company</p>
+                <h2>John Doe Furniture Company</h2>
+                <input type="text" placeholder={"email"} onChange={(e) => setEmail(e.target.value)}/>
+                <input type="text" placeholder={"password"} onChange={(e) => setPassword(e.target.value)}/>
+                <button onClick={handleSubmit}>Login</button>
+            </div>
             {Object.keys(message).length > 0 && <p>{message.authentication[0]}</p>}
-        </div>
+        </main>
     )
 }

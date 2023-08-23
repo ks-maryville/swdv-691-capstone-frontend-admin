@@ -1,5 +1,5 @@
 import './App.css';
-import {BrowserRouter, createBrowserRouter, Route, RouterProvider, Routes, useNavigate} from "react-router-dom";
+import {BrowserRouter, createBrowserRouter, Outlet, Route, RouterProvider, Routes, useNavigate} from "react-router-dom";
 import {Component, useEffect, useState} from "react";
 import {useAuthContext} from "./context/AuthContext";
 import moment from "moment";
@@ -13,8 +13,6 @@ import {AdminCustomerPage} from "./pages/AdminCustomerPage";
 import {AdminOrderPage} from "./pages/AdminOrderPage";
 import {AdminAppointmentPage} from "./pages/AdminAppointmentPage";
 import './/components/tables/tableStyles.css';
-
-
 
 
 class Unauthorized extends Component {
@@ -32,14 +30,14 @@ function App() {
 
 
     return (
+        <main className={"App"}>
+            <Routes>
 
-        <Routes>
 
-
-            <Route path={"/"} element={<GlobalLayout/>}>
-                <Route path={"/"} element={<LoginLayout/>}>
-                    <Route path={"/"} element={<LoginPage/>}/>
-                </Route>
+                {/*<Route path={"/"} element={<GlobalLayout/>}>*/}
+                {/*<Route path={"/"} element={<LoginLayout/>}>*/}
+                <Route path={"/"} element={<LoginPage/>}/>
+                {/*</Route>*/}
 
                 {/*PROTECTED ROUTES - ONLY ADMINS MAY ACCESS*/}
                 <Route element={<Protected/>}>
@@ -52,16 +50,17 @@ function App() {
 
                 {/*ROUTE WHEN AN UNAUTHORIZED USER LOGS IN - USER WITH 'USER' ROLE*/}
                 <Route path={"unauthorized"} element={<Unauthorized/>}/>
-            </Route>
+                {/*</Route>*/}
 
 
-            {/*/!*CUSTOMER PORTAL*!/*/}
-            {/*<Route path={"/customer"} element={<GlobalLayout/>}>*/}
-            {/*    <Route index element={<CustomerHomePage/>}/>*/}
-            {/*    <Route path={"profile"} element={<ProfilePage/>}/>*/}
-            {/*    <Route path={"scheduler"} element={<SchedulePage/>}/>*/}
-            {/*</Route>*/}
-        </Routes>
+                {/*/!*CUSTOMER PORTAL*!/*/}
+                {/*<Route path={"/customer"} element={<GlobalLayout/>}>*/}
+                {/*    <Route index element={<CustomerHomePage/>}/>*/}
+                {/*    <Route path={"profile"} element={<ProfilePage/>}/>*/}
+                {/*    <Route path={"scheduler"} element={<SchedulePage/>}/>*/}
+                {/*</Route>*/}
+            </Routes>
+        </main>
 
 
     );
