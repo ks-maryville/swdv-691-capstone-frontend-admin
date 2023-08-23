@@ -7,7 +7,6 @@ export function GlobalLayout() {
     const {token, authenticated, login, logout} = useAuthContext();
 
     useEffect(() => {
-        console.log("GLOBAL EFFECT TRIGGERED");
         if(token !== null && token !== undefined && token !== ""){
             navigate("/dashboard");
         }

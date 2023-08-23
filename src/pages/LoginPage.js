@@ -7,7 +7,7 @@ export function LoginPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loggedIn, setLoggedIn] = useState(false);
-    const {login, logout, token, authenticated, refresh} = useAuthContext();
+    const {login, logout, token, authenticated, refresh, message} = useAuthContext();
     const navigate = useNavigate();
 
     const handleSubmit = () => {
@@ -31,8 +31,8 @@ export function LoginPage() {
         //
         //     console.log(currentTime >= expiration._i)
 
-            // if the current time is beyond the expiration date of the jwt, remove the
-            // token and redirect to the login page
+        // if the current time is beyond the expiration date of the jwt, remove the
+        // token and redirect to the login page
         //     if (currentTime >= expiration) {
         //
         //         logout().then(response => {
@@ -65,12 +65,12 @@ export function LoginPage() {
     }, []);
 
 
-
     return (
         <div>
             <input type="text" placeholder={"email"} onChange={(e) => setEmail(e.target.value)}/>
             <input type="text" placeholder={"password"} onChange={(e) => setPassword(e.target.value)}/>
             <button onClick={handleSubmit}>Login</button>
+            {Object.keys(message).length > 0 && <p>{message.authentication[0]}</p>}
         </div>
     )
 }

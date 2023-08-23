@@ -24,7 +24,6 @@ export const OrderProvider = ({children}) => {
         let queryString = "";
         if (searchArr !== null && searchArr.length !== 0) {
             for (let i = 0; i < searchArr.length; i++) {
-                console.log(searchArr[i]);
                 if (i === 0) {
                     queryString = queryString + "?" + searchArr[i];
                 } else {
@@ -64,10 +63,10 @@ export const OrderProvider = ({children}) => {
             type: SELECT_ORDER,
             payload: found.data
         })
-        return true;
+        return found.data.data;
     }
     const getOrdersByProfileID = async (profileID) => {
-        console.log("GET ORDERS BY PROFILE ID FIRING NOW")
+
         let found = await requestWithToken(token).get(`/order/profile/${profileID}`);
 
         if (found.data.success === false) {

@@ -12,13 +12,13 @@ export const AuthProvider = ({children}) => {
         authenticated: false,
         user: {},
         token: "",
-        message: []
+        message: {}
     })
 
     const client = process.env.REACT_APP_DEFAULT_CLIENT_URL;
     const server = process.env.REACT_APP_DEFAULT_SERVER_URL;
     const setToken = (token) => {
-        console.log("set token here")
+        // console.log("set token here")
     }
 
     const register = async (obj) => {
@@ -49,7 +49,6 @@ export const AuthProvider = ({children}) => {
     }
 
     const login = async (data) => {
-        console.log(client, server);
 
         // const options = {
         //     method: "POST",
@@ -78,18 +77,23 @@ export const AuthProvider = ({children}) => {
         //         });
         //     })
         //     .catch(err => console.log(err));
-        let response = request().post(`/auth/login`, data);
+        // let response = await request().post(`/auth/login`, data);
 
-        if (response?.success === false) {
+        try{
+            let response = await request().post(`/auth/login`, data);
+            return dispatch({
+                type: LOGIN_USER,
+                payload: response.data
+            })
+        }catch(err){
             return dispatch({
                 type: AUTH_ERROR,
-                payload: await response.data.message
+                payload: err.response.data
             })
         }
-        return dispatch({
-            type: LOGIN_USER,
-            payload: await response
-        })
+
+
+
     }
 
     const logout = async () => {
@@ -103,7 +107,7 @@ export const AuthProvider = ({children}) => {
 
     const refresh = (email) => {
         let encoded = encodeURIComponent(`${email}`);
-        console.log(encoded);
+
         fetch(`${server}auth/refresh?email=${encoded}`)
             .then(response => response.json())
             .then(response => {

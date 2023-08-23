@@ -5,9 +5,10 @@ import {OrderTable} from "../components/tables/orderTable/OrderTable";
 import {AppointmentTable} from "../components/tables/appointmentTable/AppointmentTable";
 import {useOrderContext} from "../context/OrderContext";
 import {useAppointmentContext} from "../context/AppointmentContext";
+import {locations} from '../locations';
 
 export const AdminAppointmentPage = () => {
-    const [invoiceNumber, setInvoiceNumber] = useState("");
+    const [location, setLocation] = useState("");
     const [status, setStatus] = useState("");
     const [minCreationDate, setMinCreationDate] = useState("");
     const [maxCreationDate, setMaxCreationDate] = useState("");
@@ -16,7 +17,7 @@ export const AdminAppointmentPage = () => {
 
     const {customerSearch, getAllCustomers, selectedCustomer, clearCustomers} = useCustomerContext();
     const {selectedOrder, clearOrders, orderSearch, getAllOrders} = useOrderContext();
-    const {clearAppointments, getAllAppointments} = useAppointmentContext();
+    const {clearAppointments, getAllAppointments, appointmentSearch} = useAppointmentContext();
 
     useEffect(() => {
         getAllAppointments();
@@ -24,14 +25,14 @@ export const AdminAppointmentPage = () => {
 
     const handleSubmit = () => {
         let strArray = [];
-        if (invoiceNumber !== "") strArray.push(`invoiceNumber=${invoiceNumber}`);
+        if (location !== "") strArray.push(`location=${location}`);
         if (status !== "") strArray.push(`status=${status}`);
         if (minDate !== "") strArray.push(`minDate=${minDate}`);
         if (maxDate !== "") strArray.push(`email=${maxDate}`);
         if (minCreationDate !== "") strArray.push(`minCreationDate=${minCreationDate}`);
         if (maxCreationDate !== "") strArray.push(`maxCreationDate=${maxCreationDate}`);
 
-        orderSearch(strArray);
+        appointmentSearch(strArray);
         clearOrders();
         clearCustomers();
 
@@ -44,15 +45,25 @@ export const AdminAppointmentPage = () => {
         * */
     }
 
+    const setSelectedUI = ()=>{
+
+    }
     return (
         <div className="ordersPage">
-            ORDER PAGE
-            <input type="text" placeholder={"invoiceNumber"} onChange={(e) => setInvoiceNumber(e.target.value)}/>
+            APPOINTMENT PAGE
+            <select name="location" id="" onChange={(e)=>setLocation(e.target.value)}>
+                <option value="">Location</option>
+                {
+                    locations.map(location => {
+                        return <option value={location}>{location}</option>
+                    })
+                }
+            </select>
             <input type="text" placeholder={"status"} onChange={(e) => setStatus(e.target.value)}/>
-            <input type="text" placeholder={"minDate"} onChange={(e) => setMinDate(e.target.value)}/>
-            <input type="text" placeholder={"maxDate"} onChange={(e) => setMaxDate(e.target.value)}/>
-            <input type="text" placeholder={"minCreationDate"} onChange={(e) => setMinCreationDate(e.target.value)}/>
-            <input type="text" placeholder={"maxCreationDate"} onChange={(e) => setMaxCreationDate(e.target.value)}/>
+            <input type="text" placeholder={"minDate (yyyy-MM-dd)"} onChange={(e) => setMinDate(e.target.value)}/>
+            <input type="text" placeholder={"maxDate (yyyy-MM-dd)"} onChange={(e) => setMaxDate(e.target.value)}/>
+            <input type="text" placeholder={"minCreationDate (yyyy-MM-dd)"} onChange={(e) => setMinCreationDate(e.target.value)}/>
+            <input type="text" placeholder={"maxCreationDate (yyyy-MM-dd)"} onChange={(e) => setMaxCreationDate(e.target.value)}/>
             <button onClick={() => handleSubmit()}>SEARCH</button>
 
 

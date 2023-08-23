@@ -21,37 +21,36 @@ export const AppointmentProvider = ({children}) => {
     const server = process.env.REACT_APP_DEFAULT_SERVER_URL;
 
 
-    // const customerSearch = async (searchArr) => {
-    //     let queryString = "";
-    //     if (searchArr !== null && searchArr.length !== 0) {
-    //         for (let i = 0; i < searchArr.length; i++) {
-    //             console.log(searchArr[i]);
-    //             if (i === 0) {
-    //                 queryString = queryString + "?" + searchArr[i];
-    //             } else {
-    //                 queryString = queryString + "&" + searchArr[i];
-    //             }
-    //         }
-    //     }
-    //
-    //
-    //     console.log(queryString);
-    //     let found = await requestWithToken(token).get(`/profile/search${queryString}`)
-    //
-    //     if (found.data.success === false) {
-    //         return dispatch({
-    //             type: SEARCH_ERROR,
-    //             payload: found.data
-    //         })
-    //     }
-    //     dispatch({
-    //         type: GET_ALL_CUSTOMERS,
-    //         payload: found.data
-    //     })
-    //     return true;
-    // }
+    const appointmentSearch = async (searchArr) => {
+        let queryString = "";
+        if (searchArr !== null && searchArr.length !== 0) {
+            for (let i = 0; i < searchArr.length; i++) {
+                console.log(searchArr[i]);
+                if (i === 0) {
+                    queryString = queryString + "?" + searchArr[i];
+                } else {
+                    queryString = queryString + "&" + searchArr[i];
+                }
+            }
+        }
+
+
+        console.log(queryString);
+        let found = await requestWithToken(token).get(`/appointment/search${queryString}`)
+
+        if (found.data.success === false) {
+            return dispatch({
+                type: SEARCH_ERROR,
+                payload: found.data
+            })
+        }
+        dispatch({
+            type: GET_APPOINTMENTS,
+            payload: found.data
+        })
+        return true;
+    }
     const setSelected = async (orderID) =>{
-        console.log("set selected is running");
 
         let found = await requestWithToken(token).get(`appointment/${orderID}`);
 
@@ -131,7 +130,8 @@ export const AppointmentProvider = ({children}) => {
             getAppointmentsByOrderID: getAppointmentsByOrderID,
             setSelected: setSelected,
             clearAppointments: clearAppointments,
-            getAllAppointments: getAllAppointments
+            getAllAppointments: getAllAppointments,
+            appointmentSearch: appointmentSearch
         }}>
             {children}
         </AppointmentContext.Provider>

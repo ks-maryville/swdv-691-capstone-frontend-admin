@@ -1,17 +1,25 @@
 import {useTable} from 'react-table';
 import {COLUMNS} from "./columns";
 import {useCustomerContext} from "../../../context/CustomerContext";
-import {useMemo} from "react";
+import {useEffect, useMemo, useRef, useState} from "react";
 import {uuid} from "uuidv4";
 import {useOrderContext} from "../../../context/OrderContext";
 import {useAppointmentContext} from "../../../context/AppointmentContext";
+import {mccLogger} from "../../../customLogger";
 
 export const AppointmentTable = ({appointmentPrimary, invoiceNumber}) => {
     const {appointments, setSelected, selectedAppointment} = useAppointmentContext();
+
     const {getOrderByID} = useOrderContext();
+
     const {getCustomerByID} = useCustomerContext();
 
+    const [isSelected, setIsSelected] = useState(false);
+
+    const [selectedElement, setSelectedElement] = useState(null);
+
     const columns = useMemo(() => COLUMNS, []);
+
     const data = useMemo(() => appointments, [appointments]);
 
     const table = useTable({
@@ -19,15 +27,22 @@ export const AppointmentTable = ({appointmentPrimary, invoiceNumber}) => {
         data: data
     })
 
-    const handleSelect = async (appointmentID) => {
+    const handleSelect = async (e, row) => {
+        const {original, index, id} = row;
 
-        // fix issue with selected appointment not available.
+        // store which element is selected
+        setSelectedElement(id);
+        // toggle element selected
+        setIsSelected(true);
+
+
+        // fixed issue with selected appointment not available.
         // made selectAppointment return the found data as well as set it to appointment context so data
         // is made available immediately.
         // Working for now. Revisiting later as it could possibly cause unwanted side effects.
-        let selectAppointment = await setSelected(appointmentID);
-        console.log(selectAppointment);
-        //
+        let selectAppointment = await setSelected(original.appointmentID);
+
+
         if (selectAppointment !== null && Object.keys(selectAppointment).length > 0) {
 
             if (appointmentPrimary) {
@@ -45,6 +60,10 @@ export const AppointmentTable = ({appointmentPrimary, invoiceNumber}) => {
         * */
     }
 
+    useEffect(() => {
+        setSelectedElement(null);
+        setIsSelected(null);
+    }, [appointments]);
 
     const {getTableProps, getTableBodyProps, headerGroups, rows, prepareRow} = table;
 
@@ -72,12 +91,13 @@ export const AppointmentTable = ({appointmentPrimary, invoiceNumber}) => {
 
                 {
                     rows.map((row) => {
-                        // console.log(row);
                         prepareRow(row);
                         return (
-                            <tr {...row.getRowProps()} key={uuid + row}
-                                onClick={() => handleSelect(row.original.appointmentID)}>
+                            <tr className={isSelected && selectedElement === row.id ? "selected" : null}{...row.getRowProps()}
+                                key={uuid + row}
+                                onClick={(e) => handleSelect(e, row)} >
                                 {
+
                                     row.cells.map((cell) => {
 
                                         return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
