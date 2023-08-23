@@ -10,11 +10,12 @@ import {AppointmentTable} from "../appointmentTable/AppointmentTable";
 import {useAppointmentContext} from "../../../context/AppointmentContext";
 import {create} from "axios";
 import {CreateCustomerModal} from "../../Customer/CreateCustomerModal";
+import {UpdateCustomerModal} from "../../Customer/UpdateCustomerModal";
 
 export const CustomerTable = ({customerPrimary}) => {
 
     const {customers, selectedCustomer, setSelected} = useCustomerContext();
-
+    console.log(selectedCustomer)
     const {getOrdersByProfileID, selectedOrder} = useOrderContext();
     const {clearAppointments} = useAppointmentContext();
 
@@ -23,6 +24,8 @@ export const CustomerTable = ({customerPrimary}) => {
 
 
     const [createOpen, setCreateOpen] = useState(false);
+    const [updateOpen, setUpdateOpen] = useState(false);
+
 
     const formattedData = [];
 
@@ -144,7 +147,7 @@ export const CustomerTable = ({customerPrimary}) => {
                 }
                 </tbody>
             </table>
-            <button>Update</button>
+            <button onClick={()=>setUpdateOpen(!updateOpen)}>Update</button>
             <button onClick={() => setCreateOpen(!createOpen)}>New Customer</button>
             {createOpen && (
                 <>
@@ -153,6 +156,14 @@ export const CustomerTable = ({customerPrimary}) => {
                     <CreateCustomerModal createOpen={createOpen} setCreateOpen={setCreateOpen}/>
                 </>
             )
+            }
+            {JSON.stringify(selectedCustomer) !== "{}" && updateOpen  ? (
+                <>
+                    <div className={"background"} onClick={() => setUpdateOpen(!updateOpen)}></div>
+
+                    <UpdateCustomerModal updateOpen={updateOpen} setUpdateOpen={setUpdateOpen}/>
+                </>
+            ) : null
             }
 
         </div>

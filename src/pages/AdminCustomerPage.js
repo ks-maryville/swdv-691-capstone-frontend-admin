@@ -42,10 +42,6 @@ export const AdminCustomerPage = () => {
             <CustomerTable customerPrimary className="customerTable" />
             <OrderTable  className={"orderTable"} profileID={selectedCustomer && selectedCustomer.profileID} customerName={selectedCustomer && selectedCustomer.firstName}/>
             <AppointmentTable  className={"appointmentTable"} profileID={selectedOrder && selectedOrder.orderID} invoiceNumber={selectedOrder && selectedOrder.invoiceNumber}/>
-
-
-            <div className="ordersTable"></div>
-            <div className="appointmentsTable"></div>
         </div>
     )
 }
