@@ -45,6 +45,9 @@ export const AdminAppointmentPage = () => {
         * */
     }
 
+    const setSelectedUI = ()=>{
+
+    }
     return (
         <div className="ordersPage">
             APPOINTMENT PAGE

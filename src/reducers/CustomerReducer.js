@@ -4,8 +4,9 @@ export const ACTIONS = {
     GET_ASSOCIATED_ORDERS: "get_associated_orders",
     GET_ASSOCIATED_APPOINTMENTS: "get_associated_appointments",
     CLEAR_CUSTOMERS: 'clear_customers',
-    SEARCH_ERROR: "search_error",
-    GET_CUSTOMER_BY_ID: "get_customer_by_id"
+    ERROR: "error",
+    GET_CUSTOMER_BY_ID: "get_customer_by_id",
+    CREATE_CUSTOMER: "create_customer"
 }
 
 export const customerReducer = (state, action) => {
@@ -15,13 +16,14 @@ export const customerReducer = (state, action) => {
                 ...state,
                 customers: action.payload.data
             }
-        case "search_error":
+        case "error":
+            console.log("error");
             return {
                 ...state,
                 message: action.payload.message
             }
         case "select_customer":
-            console.log(action.payload);
+
             return {
                 ...state,
                 selectedCustomer: action.payload.data
@@ -36,6 +38,11 @@ export const customerReducer = (state, action) => {
             return {
                 ...state,
                 customers: [action.payload.data]
+            }
+        case "create_customer":
+            return {
+                ...state,
+                created: action.payload.data
             }
         // case "logout_user":
         //     return {

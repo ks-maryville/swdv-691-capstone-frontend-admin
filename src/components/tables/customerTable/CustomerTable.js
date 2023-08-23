@@ -1,40 +1,56 @@
 import {useTable} from 'react-table';
 import {COLUMNS} from "./columns";
 import {useCustomerContext} from "../../../context/CustomerContext";
-import {useEffect, useMemo} from "react";
+import {useEffect, useMemo, useState} from "react";
 import {uuid} from "uuidv4";
 import {OrderTable} from "../orderTable/OrderTable";
 import {useOrderContext} from "../../../context/OrderContext";
-import '../tableStyles.css';
+
 import {AppointmentTable} from "../appointmentTable/AppointmentTable";
+import {useAppointmentContext} from "../../../context/AppointmentContext";
+import {create} from "axios";
+import {CreateCustomerModal} from "../../Customer/CreateCustomerModal";
 
 export const CustomerTable = ({customerPrimary}) => {
-    console.log(customerPrimary);
+
     const {customers, selectedCustomer, setSelected} = useCustomerContext();
 
     const {getOrdersByProfileID, selectedOrder} = useOrderContext();
+    const {clearAppointments} = useAppointmentContext();
+
+    const [isSelected, setIsSelected] = useState(null);
+    const [selectedElement, setSelectedElement] = useState(null);
+
+
+    const [createOpen, setCreateOpen] = useState(false);
 
     const formattedData = [];
 
     if (customers !== null) {
-        console.log("CUSTOMERS IS NOT NULL", customers);
+
         customers.forEach(customer => {
             let newCustomerObject = {
                 profileID: customer.profileID,
                 firstName: customer.firstName,
                 lastName: customer.lastName,
                 email: customer.user.email,
-                phoneNumber: customer.phoneNumber !== null && customer.phoneNumber.number,
-                date_created: customer.date_created,
-                date_updated: customer.date_created
+                address1: customer.address1,
+                address2: customer.address2,
+                city: customer.city,
+                state: customer.state,
+                zipCode: customer.zipCode,
+                phoneNumber: customer.phoneNumber,
+                phoneType: customer.phoneType,
+                // date_created: customer.date_created,
+                // date_updated: customer.date_created
             }
-            if (customer.address !== null) {
-                newCustomerObject.address = `${customer.address.address1} ${customer.address.address2} ${customer.address.city} , ${customer.address.state} ${customer.address.zipCode}`
-            }
+            // if (customer.address !== null) {
+            //     newCustomerObject.address = `${customer.address.address1} ${customer.address.address2} ${customer.address.city} , ${customer.address.state} ${customer.address.zipCode}`
+            // }
             formattedData.push(newCustomerObject);
         })
     }
-    console.log(formattedData);
+
 
     const columns = useMemo(() => COLUMNS, []);
 
@@ -48,12 +64,18 @@ export const CustomerTable = ({customerPrimary}) => {
 
     const {getTableProps, getTableBodyProps, headerGroups, rows, prepareRow} = table;
 
-    const handleSelect = async (profileID) => {
-        let selectCustomer = await setSelected(profileID);
+    const handleSelect = async (e, row) => {
+        const {original, id} = row;
+
+        setSelectedElement(id);
+        setIsSelected(true);
+
+        let selectCustomer = await setSelected(original.profileID);
         if (selectCustomer === true) {
 
             if (customerPrimary) {
-                getOrdersByProfileID(profileID);
+                clearAppointments();
+                getOrdersByProfileID(original.profileID);
             }
         }
 
@@ -68,24 +90,35 @@ export const CustomerTable = ({customerPrimary}) => {
     }
     useEffect(() => {
 
-    }, []);
+        // when the table reloads unselect the current ui elements
+        setSelectedElement(null);
+        setIsSelected(null);
+    }, [customers]);
+
     return (
         <div>
             <h2>{customerPrimary ? `Customers` : 'Associated Customer'}</h2>
             <table {...getTableProps}>
                 <thead>
                 {
-                    headerGroups.map((headerGroup) => (
-                        <tr {...headerGroup.getHeaderProps}>
-                            {
-                                headerGroup.headers.map(column => (
-                                    <th {...column.getHeaderProps}>{column.render('Header')}</th>
-                                ))
-                            }
-                            <th></th>
 
-                        </tr>
-                    ))
+                    headerGroups.map((headerGroup) => {
+                        // console.log(headerGroup)
+                       return (
+                            <tr {...headerGroup.getHeaderProps}>
+                                {
+                                    headerGroup.headers.map(column => {
+                                        // console.log(column);
+                                        return (
+                                            <th {...column.getHeaderProps}key={column.Header}>{column.render('Header')}</th>
+                                        )
+                                    })
+                                }
+                                <th></th>
+
+                            </tr>
+                        )
+                    })
                 }
                 </thead>
 
@@ -93,15 +126,16 @@ export const CustomerTable = ({customerPrimary}) => {
 
                 {
                     rows.map((row) => {
-                        console.log(row);
+                        // console.log(row)
                         prepareRow(row);
                         return (
-                            <tr {...row.getRowProps()} key={uuid + row}
-                                onClick={(e) => handleSelect(row.original.profileID)}>
+                            <tr className={isSelected && selectedElement === row.id ? "selected" : null}{...row.getRowProps()}
+                                key={ row.original.email}
+                                onClick={(e) => handleSelect(e, row)} >
                                 {
                                     row.cells.map((cell) => {
-
-                                        return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                                        // console.log(cell)
+                                        return <td {...cell.getCellProps()} key={cell.row.original.id}>{cell.render('Cell')}</td>
                                     })
                                 }
                             </tr>
@@ -111,8 +145,15 @@ export const CustomerTable = ({customerPrimary}) => {
                 </tbody>
             </table>
             <button>Update</button>
-            <button>New Customer</button>
+            <button onClick={() => setCreateOpen(!createOpen)}>New Customer</button>
+            {createOpen && (
+                <>
+                    <div className={"background"} onClick={() => setCreateOpen()}></div>
 
+                    <CreateCustomerModal createOpen={createOpen} setCreateOpen={setCreateOpen}/>
+                </>
+            )
+            }
 
         </div>
 

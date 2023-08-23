@@ -51,7 +51,6 @@ export const AppointmentProvider = ({children}) => {
         return true;
     }
     const setSelected = async (orderID) =>{
-        console.log("set selected is running");
 
         let found = await requestWithToken(token).get(`appointment/${orderID}`);
 

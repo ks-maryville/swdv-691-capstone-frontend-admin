@@ -12,7 +12,7 @@ import {Dashboard} from "./pages/Dashboard";
 import {AdminCustomerPage} from "./pages/AdminCustomerPage";
 import {AdminOrderPage} from "./pages/AdminOrderPage";
 import {AdminAppointmentPage} from "./pages/AdminAppointmentPage";
-
+import './/components/tables/tableStyles.css';
 
 
 

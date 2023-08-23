@@ -17,11 +17,12 @@ export const authReducer = (state, action) => {
                 user: action.payload
             }
         case "login_user":
-            console.log(action.payload);
+            console.log(action.payload)
             return {
+                ...state,
                 authenticated: true,
-                user: action.payload.data.data.user,
-                token: action.payload.data.data.token
+                user: action.payload.data.user,
+                token: action.payload.data.token
             }
         case "logout_user":
             return {
@@ -29,7 +30,10 @@ export const authReducer = (state, action) => {
                 user: {}
             }
         case "auth_error":
-            return {message: action.payload};
+            return {
+                ...state,
+                message: action.payload.message
+            };
         case "refresh":
             return {
                 authenticated: true,

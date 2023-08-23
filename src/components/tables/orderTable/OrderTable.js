@@ -1,6 +1,6 @@
 import {useTable} from 'react-table';
 import {COLUMNS} from "./columns";
-import {useMemo} from "react";
+import {useEffect, useMemo, useState} from "react";
 import {uuid} from "uuidv4";
 import {useOrderContext} from "../../../context/OrderContext";
 import {useAppointmentContext} from "../../../context/AppointmentContext";
@@ -10,10 +10,19 @@ export const OrderTable = ({customerPrimary, orderPrimary, appointmentPrimary, c
 
     const {orders, setSelected, selectedOrder} = useOrderContext();
 
+
     const {getAppointmentsByOrderID} = useAppointmentContext();
+
     const {getCustomerByID} = useCustomerContext();
+
+    const [isSelected, setIsSelected] = useState(null);
+
+    const [selectedElement, setSelectedElement] = useState(null);
+
     const columns = useMemo(() => COLUMNS, []);
+
     const data = useMemo(() => orders, [orders]);
+
 
     const table = useTable({
         columns: columns,
@@ -22,14 +31,19 @@ export const OrderTable = ({customerPrimary, orderPrimary, appointmentPrimary, c
 
     const {getTableProps, getTableBodyProps, headerGroups, rows, prepareRow} = table;
 
-    const handleSelect = async (orderID) => {
-        let selectOrder = await setSelected(orderID);
-        if (selectOrder === true) {
-            getAppointmentsByOrderID(orderID);
+    const handleSelect = async (row) => {
+        const {original, id} = row;
+        console.log(row);
+        setSelectedElement(id);
+        setIsSelected(true);
 
-            if(orderPrimary){
-                console.log(selectedOrder.profileID);
-                getCustomerByID(selectedOrder.profileID);
+
+        let selectOrder = await setSelected(original.orderID);
+        if (selectOrder !== null || Object.keys(selectOrder).length > 0) {
+            getAppointmentsByOrderID(original.orderID);
+
+            if (orderPrimary) {
+                getCustomerByID(selectOrder.profileID);
             }
         }
 
@@ -46,10 +60,14 @@ export const OrderTable = ({customerPrimary, orderPrimary, appointmentPrimary, c
 
     }
 
+    useEffect(() => {
+        setSelectedElement(null);
+        setIsSelected(null);
+    }, [orders]);
 
     return (
         <div>
-            <h2>{orderPrimary ? "Orders" : "Associated Orders" }</h2>
+            <h2>{orderPrimary ? "Orders" : "Associated Orders"}</h2>
             <table {...getTableProps}>
                 <thead>
                 {
@@ -71,10 +89,10 @@ export const OrderTable = ({customerPrimary, orderPrimary, appointmentPrimary, c
 
                 {
                     rows.map((row) => {
-                        // console.log(row);
                         prepareRow(row);
                         return (
-                            <tr {...row.getRowProps()} key={uuid + row} onClick={()=>handleSelect(row.original.orderID)}>
+                            <tr className={isSelected && selectedElement === row.id ? "selected" : null} {...row.getRowProps()}
+                                key={uuid + row} onClick={() => handleSelect(row)}>
                                 {
                                     row.cells.map((cell) => {
 

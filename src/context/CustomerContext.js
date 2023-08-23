@@ -1,5 +1,5 @@
 import React, {useState, createContext, useReducer, useContext, useEffect} from 'react';
-import axios from "axios";
+import axios, {create} from "axios";
 
 
 import {request, requestWithToken} from "../axios";
@@ -9,11 +9,12 @@ import {useOrderContext} from "./OrderContext";
 import {useAppointmentContext} from "./AppointmentContext";
 
 const {
+    CREATE_CUSTOMER,
     GET_CUSTOMER_BY_ID,
     CLEAR_CUSTOMERS,
     GET_ASSOCIATED_ORDERS,
     GET_ALL_CUSTOMERS,
-    SEARCH_ERROR,
+    ERROR,
     SELECT_CUSTOMER
 } = ACTIONS;
 
@@ -25,7 +26,8 @@ export const CustomerProvider = ({children}) => {
         selectedCustomer: {},
         associatedOrders: [],
         associatedAppointments: [],
-        message: []
+        message: [],
+        userCreated: false
     })
     const {token} = useAuthContext();
     const client = process.env.REACT_APP_DEFAULT_CLIENT_URL;
@@ -75,11 +77,55 @@ export const CustomerProvider = ({children}) => {
     //     })
     // }
 
+    // const createCustomer = (userObj, profileObj, phoneObj, addressObj) => {
+    //
+    //     const userCreate = async () => {
+    //
+    //         try{
+    //             const createUser = await request().post('auth/register', userObj)
+    //             return true;
+    //         }catch(err){
+    //
+    //             // dispatch({
+    //             //     type: SEARCH_ERROR,
+    //             //     payload: createUser.data
+    //             // })
+    //             return false;
+    //         }
+    //     }
+    //     if(userCreate() === false){
+    //         console.log("user create failed");
+    //     }
+    // }
+
+    const createCustomer = async (obj) => {
+
+
+        try {
+            const response = await request().post('auth/register', obj)
+            dispatch({
+                type: CREATE_CUSTOMER,
+                payload: response.data
+            })
+            return true;
+        } catch (err) {
+            console.log("error from customer context");
+            console.log(err)
+            dispatch({
+                type: ERROR,
+                payload: err.response.data
+            })
+            return false;
+        }
+
+
+    }
+
     const customerSearch = async (searchArr) => {
         let queryString = "";
         if (searchArr !== null && searchArr.length !== 0) {
             for (let i = 0; i < searchArr.length; i++) {
-                console.log(searchArr[i]);
+
                 if (i === 0) {
                     queryString = queryString + "?" + searchArr[i];
                 } else {
@@ -92,7 +138,7 @@ export const CustomerProvider = ({children}) => {
 
         if (found.data.success === false) {
             return dispatch({
-                type: SEARCH_ERROR,
+                type: ERROR,
                 payload: found.data
             })
         }
@@ -112,13 +158,11 @@ export const CustomerProvider = ({children}) => {
         })
     }
     const setSelected = async (profileID) => {
-        console.log("SET SELECTED FIRING, PROFILE ID: " + profileID);
         let found = await requestWithToken(token).get(`/profile/${profileID}`);
 
-        console.log(found.data);
         if (found.data.success === false) {
             dispatch({
-                type: SEARCH_ERROR,
+                type: ERROR,
                 payload: found.data
             })
             return false;
@@ -136,7 +180,7 @@ export const CustomerProvider = ({children}) => {
 
         if (found.data.success === false) {
             return dispatch({
-                type: SEARCH_ERROR,
+                type: ERROR,
                 payload: found.data
             })
         }
@@ -152,7 +196,7 @@ export const CustomerProvider = ({children}) => {
 
         if (found.data.success === false) {
             return dispatch({
-                type: SEARCH_ERROR,
+                type: ERROR,
                 payload: found.data
             })
         }
@@ -163,12 +207,11 @@ export const CustomerProvider = ({children}) => {
     }
 
     const getCustomerByID = async (profileID) => {
-        console.log("profile id from get customer by id, " + 1)
         let found = await requestWithToken(token).get(`profile/${profileID}`);
 
         if (found.data.success === false) {
             return dispatch({
-                type: SEARCH_ERROR,
+                type: ERROR,
                 payload: found.data
             })
         }
@@ -203,7 +246,8 @@ export const CustomerProvider = ({children}) => {
             setSelected: setSelected,
             getAllCustomers: getAllCustomers,
             clearCustomers: clearCustomers,
-            getCustomerByID: getCustomerByID
+            getCustomerByID: getCustomerByID,
+            createCustomer: createCustomer
         }}>
             {children}
         </CustomerContext.Provider>

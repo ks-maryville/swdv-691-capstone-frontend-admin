@@ -18,7 +18,7 @@ export const appointmentReducer = (state, action) => {
                 message: action.payload.message
             }
         case "select_appointment":
-            console.log(action.payload);
+
             return {
                 ...state,
                 selectedAppointment: action.payload.data

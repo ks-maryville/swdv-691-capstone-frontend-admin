@@ -18,7 +18,6 @@ export function Dashboard() {
     // })
     //
     // if (loggedIn === false) {
-    //     console.log("NOT LOGGED IN")
     //     navigate("/")
     // }
     const handleLogout = ()=>{
