@@ -6,7 +6,8 @@ export const ACTIONS = {
     CLEAR_CUSTOMERS: 'clear_customers',
     ERROR: "error",
     GET_CUSTOMER_BY_ID: "get_customer_by_id",
-    CREATE_CUSTOMER: "create_customer"
+    CREATE_CUSTOMER: "create_customer",
+    UPDATE_CUSTOMER: "update_customer"
 }
 
 export const customerReducer = (state, action) => {
@@ -43,6 +44,19 @@ export const customerReducer = (state, action) => {
             return {
                 ...state,
                 created: action.payload.data
+            }
+        case "update_customer":
+
+            const updatedCustomers = state.customers.map(customer => {
+                if (customer.profileID === action.payload.data.profileID) {
+                    customer = action.payload.data;
+                    return customer;
+                }
+                return customer;
+            })
+            return {
+                ...state,
+                customers: updatedCustomers
             }
         // case "logout_user":
         //     return {

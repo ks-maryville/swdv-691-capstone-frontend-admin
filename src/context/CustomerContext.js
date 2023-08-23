@@ -15,7 +15,8 @@ const {
     GET_ASSOCIATED_ORDERS,
     GET_ALL_CUSTOMERS,
     ERROR,
-    SELECT_CUSTOMER
+    SELECT_CUSTOMER,
+    UPDATE_CUSTOMER
 } = ACTIONS;
 
 export const CustomerContext = createContext('');
@@ -99,8 +100,6 @@ export const CustomerProvider = ({children}) => {
     // }
 
     const createCustomer = async (obj) => {
-
-
         try {
             const response = await request().post('auth/register', obj)
             dispatch({
@@ -117,8 +116,23 @@ export const CustomerProvider = ({children}) => {
             })
             return false;
         }
+    }
 
-
+    const updateCustomer = async (obj) => {
+        try {
+            const response = await requestWithToken(token).put(`profile/update/${obj.profileID}`, obj)
+            dispatch({
+                type: UPDATE_CUSTOMER,
+                payload: response.data
+            })
+            return true;
+        } catch (err) {
+            dispatch({
+                type: ERROR,
+                payload: err.response.data
+            })
+            return false;
+        }
     }
 
     const customerSearch = async (searchArr) => {
@@ -247,7 +261,8 @@ export const CustomerProvider = ({children}) => {
             getAllCustomers: getAllCustomers,
             clearCustomers: clearCustomers,
             getCustomerByID: getCustomerByID,
-            createCustomer: createCustomer
+            createCustomer: createCustomer,
+            updateCustomer: updateCustomer
         }}>
             {children}
         </CustomerContext.Provider>
