@@ -7,7 +7,8 @@ export const ACTIONS = {
     ERROR: "error",
     GET_CUSTOMER_BY_ID: "get_customer_by_id",
     CREATE_CUSTOMER: "create_customer",
-    UPDATE_CUSTOMER: "update_customer"
+    UPDATE_CUSTOMER: "update_customer",
+    CLEAR_SELECTED: "clear_selected"
 }
 
 export const customerReducer = (state, action) => {
@@ -47,16 +48,22 @@ export const customerReducer = (state, action) => {
             }
         case "update_customer":
 
-            const updatedCustomers = state.customers.map(customer => {
-                if (customer.profileID === action.payload.data.profileID) {
-                    customer = action.payload.data;
-                    return customer;
-                }
-                return customer;
-            })
+            // const updatedCustomers = state.customers.map(customer => {
+            //     if (customer.profileID === action.payload.data.profileID) {
+            //         customer = action.payload.data;
+            //         return customer;
+            //     }
+            //     return customer;
+            // })
             return {
                 ...state,
-                customers: updatedCustomers
+                customers: state.customers.concat(action.payload.data)
+            }
+        case "clear_selected":
+
+            return {
+                ...state,
+                selectedCustomer: {}
             }
         // case "logout_user":
         //     return {

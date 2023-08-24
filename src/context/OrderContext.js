@@ -6,7 +6,7 @@ import {request, requestWithToken} from "../axios";
 import {ACTIONS, orderReducer} from "../reducers/OrderReducer";
 import {useAuthContext} from "./AuthContext";
 
-const {GET_ORDER_BY_ID, GET_ORDERS, SELECT_ORDER, SEARCH_ERROR, CLEAR_ORDERS} = ACTIONS;
+const {ERROR, CREATE_ORDER, GET_ORDER_BY_ID, GET_ORDERS, SELECT_ORDER, CLEAR_SELECTED, CLEAR_ORDERS} = ACTIONS;
 
 export const OrderContext = createContext('');
 
@@ -36,7 +36,7 @@ export const OrderProvider = ({children}) => {
 
         if (found.data.success === false) {
             return dispatch({
-                type: SEARCH_ERROR,
+                type: ERROR,
                 payload: found.data
             })
         }
@@ -54,7 +54,7 @@ export const OrderProvider = ({children}) => {
 
         if (found.data.success === false) {
             dispatch({
-                type: SEARCH_ERROR,
+                type: ERROR,
                 payload: found.data
             })
             return false;
@@ -71,7 +71,7 @@ export const OrderProvider = ({children}) => {
 
         if (found.data.success === false) {
             dispatch({
-                type: SEARCH_ERROR,
+                type: ERROR,
                 payload: found.data
             })
             return false;
@@ -89,7 +89,7 @@ export const OrderProvider = ({children}) => {
 
         if (found.data.success === false) {
             return dispatch({
-                type: SEARCH_ERROR,
+                type: ERROR,
                 payload: found.data
             })
         }
@@ -109,15 +109,41 @@ export const OrderProvider = ({children}) => {
     const getAllOrders = async () => {
         let found = await requestWithToken(token).get("order");
 
-        if(found.data.success === false){
+        if (found.data.success === false) {
             return dispatch({
-                type: SEARCH_ERROR,
+                type: ERROR,
                 payload: found.data
             })
         }
         dispatch({
             type: GET_ORDERS,
             payload: found.data
+        })
+    }
+
+    const createOrder = async (orderObj) => {
+
+        try {
+            let response = await requestWithToken(token).post('order', orderObj);
+
+            dispatch({
+                type: CREATE_ORDER,
+                payload: response.data
+            })
+            return true;
+        } catch (err) {
+            dispatch({
+                type: ERROR,
+                payload: err.response.data
+            })
+            return false;
+        }
+    }
+
+    const clearSelected = ()=>{
+        dispatch({
+            type: CLEAR_SELECTED,
+            payload: null
         })
     }
     // const refresh = (email) => {
@@ -145,9 +171,11 @@ export const OrderProvider = ({children}) => {
             getOrdersByProfileID: getOrdersByProfileID,
             setSelected: setSelected,
             clearOrders: clearOrders,
+            clearSelected: clearSelected,
             orderSearch: orderSearch,
             getOrderByID: getOrderByID,
-            getAllOrders: getAllOrders
+            getAllOrders: getAllOrders,
+            createOrder: createOrder
         }}>
             {children}
         </OrderContext.Provider>

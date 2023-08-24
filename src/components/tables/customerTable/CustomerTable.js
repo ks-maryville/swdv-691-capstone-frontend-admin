@@ -14,9 +14,9 @@ import {UpdateCustomerModal} from "../../Customer/UpdateCustomerModal";
 
 export const CustomerTable = ({customerPrimary}) => {
 
-    const {customers, selectedCustomer, setSelected} = useCustomerContext();
+    const {customers, selectedCustomer, setSelected, clearSelected} = useCustomerContext();
     console.log(selectedCustomer)
-    const {getOrdersByProfileID, selectedOrder} = useOrderContext();
+    const {getOrdersByProfileID, selectedOrder, clearOrders} = useOrderContext();
     const {clearAppointments} = useAppointmentContext();
 
     const [isSelected, setIsSelected] = useState(null);
@@ -65,17 +65,19 @@ export const CustomerTable = ({customerPrimary}) => {
     const handleSelect = async (e, row) => {
         const {original, id} = row;
 
-        setSelectedElement(id);
-        setIsSelected(true);
-
-        let selectCustomer = await setSelected(original.profileID);
-        if (selectCustomer === true) {
-
-            if (customerPrimary) {
-                clearAppointments();
-                getOrdersByProfileID(original.profileID);
-            }
+        if(isSelected && selectedElement === id){
+            setIsSelected(false);
+            setSelectedElement(null);
+            clearSelected();
+            clearOrders();
+        }else {
+            setSelectedElement(id);
+            setIsSelected(true);
+            fetchCustomer(original.profileID);
         }
+
+
+
 
         /*
         *
@@ -85,6 +87,17 @@ export const CustomerTable = ({customerPrimary}) => {
         * if the customer is NOT primary
         *       simply set the selected customer and nothing else.
         * */
+    }
+
+    const fetchCustomer = async (profileID) => {
+        let selectCustomer = await setSelected(profileID);
+        if (selectCustomer === true) {
+
+            if (customerPrimary) {
+                clearAppointments();
+                getOrdersByProfileID(profileID);
+            }
+        }
     }
     useEffect(() => {
 
