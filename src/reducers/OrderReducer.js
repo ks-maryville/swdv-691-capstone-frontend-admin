@@ -2,8 +2,10 @@ export const ACTIONS = {
     GET_ORDERS: "get_orders",
     SELECT_ORDER: "select_order",
     CLEAR_ORDERS: "clear_orders",
-    SEARCH_ERROR: "search_error",
-    GET_ORDER_BY_ID: "get_order_by_id"
+    ERROR: "error",
+    GET_ORDER_BY_ID: "get_order_by_id",
+    CREATE_ORDER: "create_order",
+    CLEAR_SELECTED: "clear_selected"
 
 }
 
@@ -14,7 +16,7 @@ export const orderReducer = (state, action) => {
                 ...state,
                 orders: action.payload.data
             }
-        case "search_error":
+        case "error":
             return {
                 ...state,
                 message: action.payload.message
@@ -34,6 +36,26 @@ export const orderReducer = (state, action) => {
             return {
                 ...state,
                 orders: [action.payload.data]
+            }
+        case "create_order":
+            // const updatedOrders = state.orders.map(order => {
+            //     console.log(order.orderID === action.payload.data.orderID);
+            //     if (order.orderID === action.payload.data.orderID) {
+            //         return action.payload.data;
+            //     }
+            //     return order;
+            // })
+            console.log("action payload: " + action.payload);
+            // const updatedOrders = state.orders.map(order=>order.orderId === action.payload.data.orderID ? action.payload.data : order)
+            // console.log(updatedOrders);
+            return {
+                ...state,
+                orders: state.orders.concat(action.payload.data)
+            }
+        case "clear_selected":
+            return {
+                ...state,
+                selectedOrder: {}
             }
         // case "get_associated_appointments":
         //     return {

@@ -10,12 +10,12 @@ import {UpdateOrderModal} from "../../Order/UpdateOrderModal";
 import {create} from "axios";
 
 export const OrderTable = ({customerPrimary, orderPrimary, appointmentPrimary, customerName}) => {
-    const {orders, setSelected, selectedOrder} = useOrderContext();
-    const {getAppointmentsByOrderID} = useAppointmentContext();
-    const {getCustomerByID} = useCustomerContext();
+    const {orders, setSelected, selectedOrder, clearSelected} = useOrderContext();
+    const {getAppointmentsByOrderID, clearAppointments} = useAppointmentContext();
+    const {getCustomerByID, selectedCustomer} = useCustomerContext();
 
 
-    const [isSelected, setIsSelected] = useState(null);
+    const [isSelected, setIsSelected] = useState(false);
     const [selectedElement, setSelectedElement] = useState(null);
 
     const [createOpen, setCreateOpen] = useState(false);
@@ -35,20 +35,17 @@ export const OrderTable = ({customerPrimary, orderPrimary, appointmentPrimary, c
 
     const handleSelect = async (row) => {
         const {original, id} = row;
-        console.log(row);
-        setSelectedElement(id);
-        setIsSelected(true);
 
-
-        let selectOrder = await setSelected(original.orderID);
-        if (selectOrder !== null || Object.keys(selectOrder).length > 0) {
-            getAppointmentsByOrderID(original.orderID);
-
-            if (orderPrimary) {
-                getCustomerByID(selectOrder.profileID);
-            }
+        if(isSelected && selectedElement === id){
+            setIsSelected(false);
+            setSelectedElement(null);
+            clearSelected();
+            clearAppointments();
+        }else{
+            setSelectedElement(id);
+            setIsSelected(true);
+            fetchOrder(original.orderID);
         }
-
         /*
         *
         * if the order table is primary
@@ -58,13 +55,23 @@ export const OrderTable = ({customerPrimary, orderPrimary, appointmentPrimary, c
         * if the appointment table is primary
         *   set the selected order
         * */
+    }
 
+    const fetchOrder = async (orderID)=>{
 
+        let selectOrder = await setSelected(orderID);
+        if(selectOrder !== null || Object.keys(selectOrder).length > 0) {
+            getAppointmentsByOrderID(orderID);
+
+            if(orderPrimary) {
+                getCustomerByID(selectOrder.profileID);
+            }
+        }
     }
 
     useEffect(() => {
         setSelectedElement(null);
-        setIsSelected(null);
+        setIsSelected(false);
     }, [orders]);
 
     return (
@@ -107,9 +114,13 @@ export const OrderTable = ({customerPrimary, orderPrimary, appointmentPrimary, c
                 }
                 </tbody>
             </table>
-            <button onClick={JSON.stringify(selectedOrder) !== "{}" ? ()=>setUpdateOpen(!updateOpen) : null}>Update</button>
-            <button onClick={()=> setCreateOpen(!createOpen)}>Create Order</button>
-            {createOpen && (
+            <button onClick={JSON.stringify(selectedOrder) !== "{}" ? () => setUpdateOpen(!updateOpen) : null}>Update
+            </button>
+            <button
+                onClick={() => setCreateOpen(JSON.stringify(selectedCustomer) !== "{}" ? !createOpen : createOpen)}>Create
+                Order
+            </button>
+            {(JSON.stringify(selectedCustomer) !== "{}" && createOpen) && (
                 <>
                     <div className="background" onClick={() => setCreateOpen(!createOpen)}>
 

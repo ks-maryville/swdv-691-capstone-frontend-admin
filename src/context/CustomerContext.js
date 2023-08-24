@@ -16,7 +16,8 @@ const {
     GET_ALL_CUSTOMERS,
     ERROR,
     SELECT_CUSTOMER,
-    UPDATE_CUSTOMER
+    UPDATE_CUSTOMER,
+    CLEAR_SELECTED
 } = ACTIONS;
 
 export const CustomerContext = createContext('');
@@ -234,6 +235,13 @@ export const CustomerProvider = ({children}) => {
             payload: found.data
         })
     }
+
+    const clearSelected = () =>{
+        dispatch({
+            type: CLEAR_SELECTED,
+            payload: null
+        })
+    }
     // const refresh = (email) => {
     //     let encoded = encodeURIComponent(`${email}`);
     //     console.log(encoded);
@@ -258,6 +266,7 @@ export const CustomerProvider = ({children}) => {
             ...state,
             customerSearch: customerSearch,
             setSelected: setSelected,
+            clearSelected: clearSelected,
             getAllCustomers: getAllCustomers,
             clearCustomers: clearCustomers,
             getCustomerByID: getCustomerByID,
