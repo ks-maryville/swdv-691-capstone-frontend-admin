@@ -9,7 +9,7 @@ import {CreateOrderModal} from "../../Order/CreateOrderModal";
 import {UpdateOrderModal} from "../../Order/UpdateOrderModal";
 import {create} from "axios";
 
-export const OrderTable = ({customerPrimary, orderPrimary, appointmentPrimary, customerName}) => {
+export const OrderTable = ({orderPrimary}) => {
     const {orders, setSelected, selectedOrder, clearSelected} = useOrderContext();
     const {getAppointmentsByOrderID, clearAppointments} = useAppointmentContext();
     const {getCustomerByID, selectedCustomer} = useCustomerContext();
@@ -116,10 +116,16 @@ export const OrderTable = ({customerPrimary, orderPrimary, appointmentPrimary, c
             </table>
             <button onClick={JSON.stringify(selectedOrder) !== "{}" ? () => setUpdateOpen(!updateOpen) : null}>Update
             </button>
-            <button
-                onClick={() => setCreateOpen(JSON.stringify(selectedCustomer) !== "{}" ? !createOpen : createOpen)}>Create
-                Order
-            </button>
+
+            {
+                !orderPrimary && (
+                    <button
+                        onClick={() => setCreateOpen(JSON.stringify(selectedCustomer) !== "{}" ? !createOpen : createOpen)}>Create
+                        Order
+                    </button>
+                )
+            }
+
             {(JSON.stringify(selectedCustomer) !== "{}" && createOpen) && (
                 <>
                     <div className="background" onClick={() => setCreateOpen(!createOpen)}>
@@ -135,12 +141,11 @@ export const OrderTable = ({customerPrimary, orderPrimary, appointmentPrimary, c
 
                     </div>
 
-                    <UpdateOrderModal/>
+                    <UpdateOrderModal updateOpen={updateOpen} setUpdateOpen={setUpdateOpen}/>
 
                 </>
-            ) : null
+            ) : null }
 
-            }
         </div>
 
     )

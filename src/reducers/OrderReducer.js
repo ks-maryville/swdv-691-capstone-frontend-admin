@@ -5,8 +5,8 @@ export const ACTIONS = {
     ERROR: "error",
     GET_ORDER_BY_ID: "get_order_by_id",
     CREATE_ORDER: "create_order",
-    CLEAR_SELECTED: "clear_selected"
-
+    CLEAR_SELECTED: "clear_selected",
+    UPDATE_ORDER: "update_order"
 }
 
 export const orderReducer = (state, action) => {
@@ -56,6 +56,13 @@ export const orderReducer = (state, action) => {
             return {
                 ...state,
                 selectedOrder: {}
+            }
+        case "update_order":
+            let updated = action.payload.data;
+            const updatedOrders = state.orders.map(order=> order.orderID === updated.orderID ? updated : order);
+            return {
+                ...state,
+                orders: updatedOrders
             }
         // case "get_associated_appointments":
         //     return {

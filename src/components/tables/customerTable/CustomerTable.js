@@ -65,18 +65,16 @@ export const CustomerTable = ({customerPrimary}) => {
     const handleSelect = async (e, row) => {
         const {original, id} = row;
 
-        if(isSelected && selectedElement === id){
+        if (isSelected && selectedElement === id) {
             setIsSelected(false);
             setSelectedElement(null);
             clearSelected();
             clearOrders();
-        }else {
+        } else {
             setSelectedElement(id);
             setIsSelected(true);
             fetchCustomer(original.profileID);
         }
-
-
 
 
         /*
@@ -115,13 +113,14 @@ export const CustomerTable = ({customerPrimary}) => {
 
                     headerGroups.map((headerGroup) => {
                         // console.log(headerGroup)
-                       return (
+                        return (
                             <tr {...headerGroup.getHeaderProps}>
                                 {
                                     headerGroup.headers.map(column => {
                                         // console.log(column);
                                         return (
-                                            <th {...column.getHeaderProps}key={column.Header}>{column.render('Header')}</th>
+                                            <th {...column.getHeaderProps}
+                                                key={column.Header}>{column.render('Header')}</th>
                                         )
                                     })
                                 }
@@ -141,12 +140,13 @@ export const CustomerTable = ({customerPrimary}) => {
                         prepareRow(row);
                         return (
                             <tr className={isSelected && selectedElement === row.id ? "selected" : null}{...row.getRowProps()}
-                                key={ row.original.email}
-                                onClick={(e) => handleSelect(e, row)} >
+                                key={row.original.email}
+                                onClick={(e) => handleSelect(e, row)}>
                                 {
                                     row.cells.map((cell) => {
                                         // console.log(cell)
-                                        return <td {...cell.getCellProps()} key={cell.row.original.id}>{cell.render('Cell')}</td>
+                                        return <td {...cell.getCellProps()}
+                                                   key={cell.row.original.id}>{cell.render('Cell')}</td>
                                     })
                                 }
                             </tr>
@@ -155,8 +155,14 @@ export const CustomerTable = ({customerPrimary}) => {
                 }
                 </tbody>
             </table>
-            <button onClick={()=>setUpdateOpen(!updateOpen)}>Update</button>
-            <button onClick={() => setCreateOpen(!createOpen)}>New Customer</button>
+            <button
+                onClick={JSON.stringify(selectedCustomer) !== "{}" ? () => setUpdateOpen(!updateOpen) : null}>Update
+            </button>
+            {
+                customerPrimary && (
+                    <button onClick={() => setCreateOpen(!createOpen)}>New Customer</button>
+                )
+            }
             {createOpen && (
                 <>
                     <div className={"background"} onClick={() => setCreateOpen(!createOpen)}></div>
@@ -165,7 +171,7 @@ export const CustomerTable = ({customerPrimary}) => {
                 </>
             )
             }
-            {JSON.stringify(selectedCustomer) !== "{}" && updateOpen  ? (
+            {JSON.stringify(selectedCustomer) !== "{}" && updateOpen ? (
                 <>
                     <div className={"background"} onClick={() => setUpdateOpen(!updateOpen)}></div>
 

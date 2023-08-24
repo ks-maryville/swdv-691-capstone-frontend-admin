@@ -44,20 +44,14 @@ export const customerReducer = (state, action) => {
         case "create_customer":
             return {
                 ...state,
-                created: action.payload.data
+                created: state.customers.concat(action.payload.data)
             }
         case "update_customer":
-
-            // const updatedCustomers = state.customers.map(customer => {
-            //     if (customer.profileID === action.payload.data.profileID) {
-            //         customer = action.payload.data;
-            //         return customer;
-            //     }
-            //     return customer;
-            // })
+            let updated = action.payload.data;
+            const updatedCustomers = state.customers.map(customer => customer.profileID === updated.profileID ? updated : customer);
             return {
                 ...state,
-                customers: state.customers.concat(action.payload.data)
+                customers: updatedCustomers
             }
         case "clear_selected":
 
