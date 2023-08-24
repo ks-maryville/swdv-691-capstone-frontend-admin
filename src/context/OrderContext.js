@@ -6,7 +6,7 @@ import {request, requestWithToken} from "../axios";
 import {ACTIONS, orderReducer} from "../reducers/OrderReducer";
 import {useAuthContext} from "./AuthContext";
 
-const {ERROR, CREATE_ORDER, GET_ORDER_BY_ID, GET_ORDERS, SELECT_ORDER, CLEAR_SELECTED, CLEAR_ORDERS} = ACTIONS;
+const {ERROR, CREATE_ORDER, GET_ORDER_BY_ID, GET_ORDERS, SELECT_ORDER, CLEAR_SELECTED, CLEAR_ORDERS,UPDATE_ORDER} = ACTIONS;
 
 export const OrderContext = createContext('');
 
@@ -146,6 +146,39 @@ export const OrderProvider = ({children}) => {
             payload: null
         })
     }
+
+    const updateOrder = async (obj) => {
+        try {
+            const response = await requestWithToken(token).put(`order/update/${obj.orderID}`, obj)
+            dispatch({
+                type: UPDATE_ORDER,
+                payload: response.data
+            })
+            return true;
+        } catch (err) {
+            dispatch({
+                type: ERROR,
+                payload: err.response.data
+            })
+            return false;
+        }
+    }
+
+    const updateStatus = async (orderID, status) => {
+
+        try {
+            let response = await requestWithToken(token).put(`order/${orderID}/update_status/${status}`);
+            dispatch({
+                type: UPDATE_ORDER,
+                payload: response.data
+            })
+        }catch(err){
+            dispatch({
+                type: ERROR,
+                payload: err.response.data
+            })
+        }
+    }
     // const refresh = (email) => {
     //     let encoded = encodeURIComponent(`${email}`);
     //     console.log(encoded);
@@ -175,7 +208,9 @@ export const OrderProvider = ({children}) => {
             orderSearch: orderSearch,
             getOrderByID: getOrderByID,
             getAllOrders: getAllOrders,
-            createOrder: createOrder
+            createOrder: createOrder,
+            updateOrder: updateOrder,
+            updateStatus: updateStatus
         }}>
             {children}
         </OrderContext.Provider>
