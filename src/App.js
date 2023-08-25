@@ -13,6 +13,7 @@ import {AdminCustomerPage} from "./pages/AdminCustomerPage";
 import {AdminOrderPage} from "./pages/AdminOrderPage";
 import {AdminAppointmentPage} from "./pages/AdminAppointmentPage";
 import './/components/tables/tableStyles.css';
+import {checkBusinessHours, toUTC} from "./Helper/time";
 
 
 class Unauthorized extends Component {
@@ -28,7 +29,8 @@ function App() {
 
     }, []);
 
-
+   checkBusinessHours("2023-08-24");
+   toUTC("2023-08-25 12:00");
     return (
         <main className={"App"}>
             <Routes>

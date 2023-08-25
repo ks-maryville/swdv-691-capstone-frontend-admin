@@ -15,7 +15,6 @@ import {UpdateCustomerModal} from "../../Customer/UpdateCustomerModal";
 export const CustomerTable = ({customerPrimary}) => {
 
     const {customers, selectedCustomer, setSelected, clearSelected} = useCustomerContext();
-    console.log(selectedCustomer)
     const {getOrdersByProfileID, selectedOrder, clearOrders} = useOrderContext();
     const {clearAppointments} = useAppointmentContext();
 
