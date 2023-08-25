@@ -6,7 +6,16 @@ import {request, requestWithToken} from "../axios";
 import {ACTIONS, orderReducer} from "../reducers/OrderReducer";
 import {useAuthContext} from "./AuthContext";
 
-const {ERROR, CREATE_ORDER, GET_ORDER_BY_ID, GET_ORDERS, SELECT_ORDER, CLEAR_SELECTED, CLEAR_ORDERS,UPDATE_ORDER} = ACTIONS;
+const {
+    ERROR,
+    CREATE_ORDER,
+    GET_ORDER_BY_ID,
+    GET_ORDERS,
+    SELECT_ORDER,
+    CLEAR_SELECTED,
+    CLEAR_ORDERS,
+    UPDATE_ORDER
+} = ACTIONS;
 
 export const OrderContext = createContext('');
 
@@ -17,8 +26,7 @@ export const OrderProvider = ({children}) => {
         message: []
     })
     const {token} = useAuthContext();
-    const client = process.env.REACT_APP_DEFAULT_CLIENT_URL;
-    const server = process.env.REACT_APP_DEFAULT_SERVER_URL;
+
 
     const orderSearch = async (searchArr) => {
         let queryString = "";
@@ -50,53 +58,58 @@ export const OrderProvider = ({children}) => {
     }
     const setSelected = async (orderID) => {
 
-        let found = await requestWithToken(token).get(`/order/${orderID}`);
+        try {
+            let found = await requestWithToken(token).get(`/order/${orderID}`);
+            dispatch({
+                type: SELECT_ORDER,
+                payload: found.data
+            })
+            return true;
 
-        if (found.data.success === false) {
+        } catch (err) {
             dispatch({
                 type: ERROR,
-                payload: found.data
+                payload: err.response.data
             })
             return false;
         }
-        dispatch({
-            type: SELECT_ORDER,
-            payload: found.data
-        })
-        return found.data.data;
+
     }
     const getOrdersByProfileID = async (profileID) => {
 
-        let found = await requestWithToken(token).get(`/order/profile/${profileID}`);
-
-        if (found.data.success === false) {
+        try {
+            let found = await requestWithToken(token).get(`/order/profile/${profileID}`);
+            dispatch({
+                type: GET_ORDERS,
+                payload: found.data
+            })
+            return true;
+        } catch (err) {
             dispatch({
                 type: ERROR,
-                payload: found.data
+                payload: err.response.data
             })
             return false;
         }
 
-        dispatch({
-            type: GET_ORDERS,
-            payload: found.data
-        })
-        return true;
-
     }
     const getOrderByID = async (orderID) => {
-        let found = await requestWithToken(token).get(`/order/${orderID}`);
 
-        if (found.data.success === false) {
-            return dispatch({
-                type: ERROR,
+        try {
+            let found = await requestWithToken(token).get(`/order/${orderID}`);
+            dispatch({
+                type: GET_ORDER_BY_ID,
                 payload: found.data
-            })
+            });
+            return true;
+        } catch (err) {
+            dispatch({
+                type: ERROR,
+                payload: err.response.data
+            });
+            return false;
         }
-        dispatch({
-            type: GET_ORDER_BY_ID,
-            payload: found.data
-        })
+
     }
 
     const clearOrders = () => {
@@ -109,16 +122,19 @@ export const OrderProvider = ({children}) => {
     const getAllOrders = async () => {
         let found = await requestWithToken(token).get("order");
 
-        if (found.data.success === false) {
-            return dispatch({
-                type: ERROR,
+        try{
+            dispatch({
+                type: GET_ORDERS,
                 payload: found.data
-            })
+            });
+            return true;
+        }catch(err){
+             dispatch({
+                type: ERROR,
+                payload: err.response.data
+            });
+            return false;
         }
-        dispatch({
-            type: GET_ORDERS,
-            payload: found.data
-        })
     }
 
     const createOrder = async (orderObj) => {
@@ -140,7 +156,7 @@ export const OrderProvider = ({children}) => {
         }
     }
 
-    const clearSelected = ()=>{
+    const clearSelected = () => {
         dispatch({
             type: CLEAR_SELECTED,
             payload: null
@@ -172,11 +188,13 @@ export const OrderProvider = ({children}) => {
                 type: UPDATE_ORDER,
                 payload: response.data
             })
-        }catch(err){
+            return true;
+        } catch (err) {
             dispatch({
                 type: ERROR,
                 payload: err.response.data
             })
+            return false;
         }
     }
     // const refresh = (email) => {

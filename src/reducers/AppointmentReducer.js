@@ -1,8 +1,13 @@
+import moment from 'moment-timezone';
 export const ACTIONS = {
     GET_APPOINTMENTS: "get_appointments",
     SELECT_APPOINTMENT: "select_appointment",
     CLEAR_APPOINTMENTS: "clear_appointments",
-    SEARCH_ERROR: "search_error"
+    ERROR: "error",
+    CREATE_APPOINTMENT: "create_appointment",
+    UPDATE_APPOINTMENT: "update_appointment",
+    CLEAR_SELECTED: "clear_selected",
+    GET_AVAILABLE: "get_available"
 }
 
 export const appointmentReducer = (state, action) => {
@@ -12,7 +17,7 @@ export const appointmentReducer = (state, action) => {
                 ...state,
                 appointments: action.payload.data
             }
-        case "search_error":
+        case "error":
             return {
                 ...state,
                 message: action.payload.message
@@ -28,6 +33,31 @@ export const appointmentReducer = (state, action) => {
                 ...state,
                 selectedAppointment: {},
                 appointments: []
+            }
+        case "create_appointment":
+            return {
+                ...state,
+                appointments: state.appointments.concat(action.payload.data)
+            }
+        case "update_appointment":
+            let updated = action.payload.data;
+            const updatedAppointments = state.appointments.map(appointment=> appointment.appointmentID === updated.appointmentID ? updated : appointment);
+            return {
+                ...state,
+                appointments: updatedAppointments
+            }
+        case "clear_selected":
+            return {
+                ...state,
+                selectedAppointment: {}
+            }
+        case "get_available":
+            return {
+                ...state,
+                unavailableDates: action.payload.data.length > 0 ? action.payload.data.map(date => {
+                    // let formatted = date.slice(11, -13);
+                    return moment(date).format("yyyy-MM-DD HH:mm");
+                }) : []
             }
         // case "logout_user":
         //     return {

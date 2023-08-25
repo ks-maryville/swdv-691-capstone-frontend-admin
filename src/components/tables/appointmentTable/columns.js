@@ -5,7 +5,7 @@ export const COLUMNS = [
     },
     {
         Header: "date",
-        accessor: "date"
+        accessor: "appointmentDate"
     },
     {
         Header: "status",
@@ -17,10 +17,10 @@ export const COLUMNS = [
     },
     {
         Header: "date created",
-        accessor: "date_created"
+        accessor: "dateCreated"
     },
     {
         Header: "date updated",
-        accessor: "date_updated"
+        accessor: "dateUpdated"
     }
 ]

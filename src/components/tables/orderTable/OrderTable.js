@@ -44,7 +44,7 @@ export const OrderTable = ({orderPrimary}) => {
         }else{
             setSelectedElement(id);
             setIsSelected(true);
-            fetchOrder(original.orderID);
+            await fetchOrder(original.orderID);
         }
         /*
         *
@@ -60,7 +60,14 @@ export const OrderTable = ({orderPrimary}) => {
     const fetchOrder = async (orderID)=>{
 
         let selectOrder = await setSelected(orderID);
-        if(selectOrder !== null || Object.keys(selectOrder).length > 0) {
+        // if(selectOrder !== null || Object.keys(selectOrder).length > 0) {
+        //     getAppointmentsByOrderID(orderID);
+        //
+        //     if(orderPrimary) {
+        //         getCustomerByID(selectOrder.profileID);
+        //     }
+        // }
+        if(selectOrder === true) {
             getAppointmentsByOrderID(orderID);
 
             if(orderPrimary) {

@@ -6,17 +6,21 @@ import {uuid} from "uuidv4";
 import {useOrderContext} from "../../../context/OrderContext";
 import {useAppointmentContext} from "../../../context/AppointmentContext";
 import {mccLogger} from "../../../customLogger";
+import {CreateOrderModal} from "../../Order/CreateOrderModal";
+import {ScheduleAppointmentModal} from "../../Appointment/ScheduleAppointmentModal";
 
 export const AppointmentTable = ({appointmentPrimary, invoiceNumber}) => {
-    const {appointments, setSelected, selectedAppointment} = useAppointmentContext();
-
+    const {appointments, setSelected, selectedAppointment, clearSelected} = useAppointmentContext();
+    const {selectedOrder} = useOrderContext();
     const {getOrderByID} = useOrderContext();
 
     const {getCustomerByID} = useCustomerContext();
 
     const [isSelected, setIsSelected] = useState(false);
-
     const [selectedElement, setSelectedElement] = useState(null);
+
+    const [createOpen, setCreateOpen] = useState(false);
+    const [updateOpen, setUpdateOpen] = useState(false);
 
     const columns = useMemo(() => COLUMNS, []);
 
@@ -27,30 +31,39 @@ export const AppointmentTable = ({appointmentPrimary, invoiceNumber}) => {
         data: data
     })
 
-    const handleSelect = async (e, row) => {
-        const {original, index, id} = row;
+    const handleSelect = async ( row) => {
+        const {original, id} = row;
 
         // store which element is selected
-        setSelectedElement(id);
         // toggle element selected
-        setIsSelected(true);
+        // setSelectedElement(id);
+        // setIsSelected(true);
 
+        if(isSelected && selectedElement === id){
+            setIsSelected(false);
+            setSelectedElement(null);
+            clearSelected();
+        }else {
+            setSelectedElement(id);
+            setIsSelected(true);
+            fetchAppointment(original.appointmentID);
+        }
 
         // fixed issue with selected appointment not available.
         // made selectAppointment return the found data as well as set it to appointment context so data
         // is made available immediately.
         // Working for now. Revisiting later as it could possibly cause unwanted side effects.
-        let selectAppointment = await setSelected(original.appointmentID);
-
-
-        if (selectAppointment !== null && Object.keys(selectAppointment).length > 0) {
-
-            if (appointmentPrimary) {
-                getOrderByID(selectAppointment.orderID);
-                getCustomerByID(selectAppointment.profileID);
-            }
-
-        }
+        // let selectAppointment = await setSelected(original.appointmentID);
+        //
+        //
+        // if (selectAppointment !== null && Object.keys(selectAppointment).length > 0) {
+        //
+        //     if (appointmentPrimary) {
+        //         getOrderByID(selectAppointment.orderID);
+        //         getCustomerByID(selectAppointment.profileID);
+        //     }
+        //
+        // }
 
         /*
         *
@@ -58,6 +71,17 @@ export const AppointmentTable = ({appointmentPrimary, invoiceNumber}) => {
         *       get all orders associated with the apointments
         *       get the customer associated with the appointment
         * */
+    }
+
+    const fetchAppointment = async (appointmentID)=>{
+        let selectAppointment = await setSelected(appointmentID);
+        if(selectAppointment === true){
+
+            if(appointmentPrimary){
+                getOrderByID(selectedAppointment.orderID);
+                getCustomerByID(selectedAppointment.profileID);
+            }
+        }
     }
 
     useEffect(() => {
@@ -95,7 +119,7 @@ export const AppointmentTable = ({appointmentPrimary, invoiceNumber}) => {
                         return (
                             <tr className={isSelected && selectedElement === row.id ? "selected" : null}{...row.getRowProps()}
                                 key={uuid + row}
-                                onClick={(e) => handleSelect(e, row)} >
+                                onClick={(e) => handleSelect(row)} >
                                 {
 
                                     row.cells.map((cell) => {
@@ -110,7 +134,16 @@ export const AppointmentTable = ({appointmentPrimary, invoiceNumber}) => {
                 </tbody>
             </table>
             <button>Update</button>
-            <button>Schedule Appointment</button>
+            <button onClick={()=>setCreateOpen(JSON.stringify(selectedOrder) !== "{}" ? !createOpen : createOpen)}>Schedule Appointment</button>
+            {(JSON.stringify(selectedOrder) !== "{}" && createOpen) && (
+                <>
+                    <div className="background" onClick={() => setCreateOpen(!createOpen)}>
+
+                    </div>
+
+                    <ScheduleAppointmentModal createOpen={createOpen} setCreateOpen={setCreateOpen}/>
+                </>
+            )}
         </div>
 
     )

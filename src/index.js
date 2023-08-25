@@ -8,7 +8,9 @@ import {BrowserRouter, Route, Routes} from "react-router-dom";
 import {CustomerProvider} from "./context/CustomerContext";
 import {OrderProvider} from "./context/OrderContext";
 import {AppointmentProvider} from "./context/AppointmentContext";
+import moment from 'moment-timezone';
 
+// moment.tz.setDefault("America/Chicago");
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <React.StrictMode>
