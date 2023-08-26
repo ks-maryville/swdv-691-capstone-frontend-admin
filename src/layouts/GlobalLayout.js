@@ -5,7 +5,7 @@ import {Outlet, useNavigate} from "react-router-dom";
 export function GlobalLayout() {
 
     return (
-        <main className={"app"}>
+        <main>
             "HELLO"
             <Outlet/>
         </main>

@@ -40,23 +40,30 @@ export const OrderProvider = ({children}) => {
             }
         }
 
-        let found = await requestWithToken(token).get(`/order/search${queryString}`)
 
-        if (found.data.success === false) {
-            return dispatch({
-                type: ERROR,
+        try {
+            let found;
+            if (queryString === "" || queryString === undefined || queryString.length < 1) {
+                found = await requestWithToken(token).get(`order`);
+            } else {
+
+                found = await requestWithToken(token).get(`/order/search${queryString}`)
+            }
+            dispatch({
+                type: GET_ORDERS,
                 payload: found.data
             })
+            return true;
+        } catch (err) {
+            dispatch({
+                type: ERROR,
+                payload: err.response.data
+            })
+            return false;
         }
 
-
-        dispatch({
-            type: GET_ORDERS,
-            payload: found.data
-        })
-        return true;
     }
-    const setSelected = async (orderID) => {
+    const setSelectedOrder = async (orderID) => {
 
         try {
             let found = await requestWithToken(token).get(`/order/${orderID}`);
@@ -122,14 +129,14 @@ export const OrderProvider = ({children}) => {
     const getAllOrders = async () => {
         let found = await requestWithToken(token).get("order");
 
-        try{
+        try {
             dispatch({
                 type: GET_ORDERS,
                 payload: found.data
             });
             return true;
-        }catch(err){
-             dispatch({
+        } catch (err) {
+            dispatch({
                 type: ERROR,
                 payload: err.response.data
             });
@@ -156,7 +163,7 @@ export const OrderProvider = ({children}) => {
         }
     }
 
-    const clearSelected = () => {
+    const clearSelectedOrder = () => {
         dispatch({
             type: CLEAR_SELECTED,
             payload: null
@@ -220,9 +227,9 @@ export const OrderProvider = ({children}) => {
         <OrderContext.Provider value={{
             ...state,
             getOrdersByProfileID: getOrdersByProfileID,
-            setSelected: setSelected,
+            setSelectedOrder: setSelectedOrder,
             clearOrders: clearOrders,
-            clearSelected: clearSelected,
+            clearSelectedOrder: clearSelectedOrder,
             orderSearch: orderSearch,
             getOrderByID: getOrderByID,
             getAllOrders: getAllOrders,

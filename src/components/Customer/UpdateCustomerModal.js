@@ -59,22 +59,35 @@ export const UpdateCustomerModal = ({updateOpen, setUpdateOpen}) => {
 
             <div className={"left"}>
                 <div>
+                    <label htmlFor="">Email</label>
                     <input type="text" name="" id="" value={email} placeholder={"email"} onChange={(e) => setEmail(e.target.value)}/>
                 </div>
 
 
                 <div>
+                    <label htmlFor="">First Name</label>
                     <input type="text" name="" id="" value={firstName} placeholder={"first name"}
                            onChange={(e) => setFirstName(e.target.value)}/>
+                </div>
+                <div>
+                    <label htmlFor="">Middle Initial</label>
                     <input type="text" name="" id="" value={middleInitial} placeholder={"middle initial"}
                            onChange={(e) => setMiddleInitial(e.target.value)}/>
-                    <input type="text" name="" id="" value={lastName} placeholder={"last name"}
-                           onChange={(e) => setLastName(e.target.value)}/>
                 </div>
+                    <div>
+                        <label htmlFor="">Last Name</label>
+                        <input type="text" name="" id="" value={lastName} placeholder={"last name"}
+                               onChange={(e) => setLastName(e.target.value)}/>
+                    </div>
+
 
 
                 <div>
+                    <label htmlFor="">Phone Number</label>
                     <input type="text" placeholder={"phone number"} value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)}/>
+                </div>
+                <div>
+                    <label htmlFor="">Phone Type</label>
                     <select name="" id=""  value={phoneType} onChange={(e) => setPhoneType(e.target.value)}>
                         <option value="">Phone Type</option>
                         <option value="MOBILE">MOBILE</option>
@@ -82,23 +95,35 @@ export const UpdateCustomerModal = ({updateOpen, setUpdateOpen}) => {
                     </select>
                 </div>
 
+
                 <div>
+                    <label htmlFor="">Address1</label>
                     <input type="text" placeholder={"address1"} value={address1} onChange={(e) => setAddress1(e.target.value)}/>
-                    <input type="text" placeholder={"address2"} value={address2} onChange={(e) => setAddress2(e.target.value)}/>
-                    <input type="text" placeholder={"city"} value={city} onChange={(e) => setCity(e.target.value)}/>
-                    <select name="" id=""  value={state} onChange={(e) => setState(e.target.value)}>
-                        <option value="">state</option>
-                        {
-                            states.map(state => {
-                                return <option value={state}>{state}</option>
-                            })
-                        }
-                    </select>
                 </div>
+                <div>
+                    <label htmlFor="">Address2</label>
+                    <input type="text" placeholder={"address2"} value={address2}
+                          onChange={(e) => setAddress2(e.target.value)}/></div>
+                <div>
+                    <label htmlFor="">City</label>
+                    <input type="text" placeholder={"city"} value={city} onChange={(e) => setCity(e.target.value)}/></div>
+                <div>
+                    <label htmlFor="">State</label>
+                    <select name="" id="" value={state} onChange={(e) => setState(e.target.value)}>
+                    <option value="">state</option>
+                    {
+                        states.map(state => {
+                            return <option value={state}>{state}</option>
+                        })
+                    }
+                </select></div>
 
-                <input type="text" placeholder={"zip code"} value={zipCode} onChange={(e) => setZipCode(e.target.value)}/>
+                <div>
+                    <label htmlFor="">Zip Code</label>
+                    <input type="text" placeholder={"zip code"} value={zipCode}
+                            onChange={(e) => setZipCode(e.target.value)}/></div>
 
-                <button>Cancel</button>
+                <button onClick={(e)=>setUpdateOpen(!updateOpen)}>Cancel</button>
                 <button onClick={() => handleSubmit()}>Submit</button>
             </div>
             <div className={"right error"}>

@@ -3,12 +3,9 @@ import {useAuthContext} from "../context/AuthContext";
 import moment from "moment";
 import {useEffect, useState} from "react";
 
-export function Dashboard() {
-    const navigate = useNavigate();
-    const [loggedIn, setLoggedIn] = useState(false);
-    const {logout, refresh, authenticated} = useAuthContext();
-
-
+export function Dashboard(props) {
+    const {user} = useAuthContext();
+    console.log(props.location);
     // const getAuthenticated = async () => {
     //     let auth = await authenticated;
     //     return auth;
@@ -20,18 +17,23 @@ export function Dashboard() {
     // if (loggedIn === false) {
     //     navigate("/")
     // }
-    const handleLogout = ()=>{
-        logout();
-        navigate("/");
-    }
 
+     const contentStyles = {
+            backgroundColor: "white",
+            border: "1px solid navy",
+            borderRadius: "15px",
+            display: "inline-block",
+            height: "50px",
+            padding: "3%",
+            marginTop: "50px"
+     }
 
     return (
-        <div>
-           <button onClick={()=>handleLogout()}>Logout</button>
-            <Link to={"/customers"}>Customers</Link>
-            <Link to={"/orders"}>Orders</Link>
-            <Link to={"/appointments"}>Appointments</Link>
+        <div style={{textAlign: "center"}}>
+        <h2 style={{textAlign: "center", fontWeight: "bold"}}>Welcome! {user.email}</h2>
+        <Link className={"dashboardLinks"} style={contentStyles} to={"/customers"}>CUSTOMERS</Link>
+        <Link className={"dashboardLinks"} style={contentStyles} to={"/orders"}>ORDERS</Link>
+        <Link className={"dashboardLinks"} style={contentStyles} to={"/appointments"}>APPOINTMENTS</Link>
         </div>
     )
 }

@@ -11,7 +11,7 @@ export function LoginPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loggedIn, setLoggedIn] = useState(false);
-    const {login, logout, token, authenticated, refresh, message, } = useAuthContext();
+    const {login, logout, token, authenticated, refresh, message} = useAuthContext();
 
     const handleSubmit = () => {
         let loginObject = {
@@ -63,12 +63,16 @@ export function LoginPage() {
         //     }
         // }
     }
+    useEffect(() => {
+        refresh();
+    }, []);
 
     useEffect(() => {
-        if(token !== null && token !== undefined && token !== ""){
+        if (token !== null && token !== undefined && token !== "") {
             navigate("/dashboard");
         }
     }, [token]);
+
 
 
     return (
@@ -76,10 +80,16 @@ export function LoginPage() {
             <div className="loginWrapper">
                 <h1 className={"h1"}>Admin Panel</h1>
                 <h2 className={"header"}>John Doe Furniture Company</h2>
-                <input className={"loginInput"} type="text" placeholder={"email"} onChange={(e) => setEmail(e.target.value)}/>
-                <input className={"loginInput"} type="text" placeholder={"password"} onChange={(e) => setPassword(e.target.value)}/>
-                <button className={"loginSubmit"} onClick={handleSubmit}>Login</button>
-                {Object.keys(message).length > 0 && <p className={"loginError"}>{message.authentication[0]}</p>}
+
+                    <input className={"loginInput"} type="text" placeholder={"email"}
+                           onChange={(e) => setEmail(e.target.value)}/>
+                    <input className={"loginInput"} type="password" placeholder={"password"}
+                           onChange={(e) => setPassword(e.target.value)}/>
+                    <button className={"loginSubmit"} onClick={handleSubmit}>Login</button>
+
+
+                {(message && Object.keys(message).length > 0) &&
+                    <p className={"loginError"}>{message.authentication[0]}</p>}
             </div>
         </main>
     )

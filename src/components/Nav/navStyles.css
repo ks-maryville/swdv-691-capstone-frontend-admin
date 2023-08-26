@@ -1,0 +1,39 @@
+nav {
+
+   padding: 20px 0 10px 0;
+    display: flex;
+
+    margin-bottom: 20px;
+    /*max-width: 95%;*/
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+}
+a {
+    color: black;
+    text-decoration: none;
+    display: block;
+    margin-left: 15px;
+}
+
+.navContainer {
+    background-color: green;
+
+}
+nav > button {
+    border: none;
+    border-radius: 15px;
+    margin-left: 30px;
+    padding:  10px;
+}
+
+nav > button:hover {
+    cursor: pointer;
+    background-color: #2E378F;
+    color: white;
+}
+
+.backToDashboard {
+    justify-self: flex-start;
+    margin-right: auto;
+}

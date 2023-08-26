@@ -34,8 +34,9 @@ export const AppointmentProvider = ({children}) => {
     const scheduleAppointment = async (appointmentObj) => {
         console.log("time going into function", appointmentObj.appointmentDate)
 
+        console.log(appointmentObj);
         // appointmentObj.appointmentDate = toUTC(appointmentObj.date);
-        console.log("time after conversion",appointmentObj.appointmentDate);
+        console.log("time after conversion", appointmentObj.appointmentDate);
         try {
             let created = await requestWithToken(token).post("appointment", appointmentObj);
             dispatch({
@@ -85,7 +86,12 @@ export const AppointmentProvider = ({children}) => {
 
 
         try {
-            let found = await requestWithToken(token).get(`/appointment/search${queryString}`)
+            let found;
+            if (queryString === "" || queryString === undefined || queryString.length < 1) {
+                found = await requestWithToken(token).get(`/appointment`)
+            } else {
+                found = await requestWithToken(token).get(`/appointment/search${queryString}`)
+            }
             dispatch({
                 type: GET_APPOINTMENTS,
                 payload: found.data
@@ -138,7 +144,7 @@ export const AppointmentProvider = ({children}) => {
             return false;
         }
     }
-    const setSelected = async (orderID) => {
+    const setSelectedAppointment = async (orderID) => {
 
         try {
             let found = await requestWithToken(token).get(`appointment/${orderID}`);
@@ -157,7 +163,7 @@ export const AppointmentProvider = ({children}) => {
         }
     }
 
-    const clearSelected = () => {
+    const clearSelectedAppointment = () => {
         dispatch({
             type: CLEAR_SELECTED,
             payload: null
@@ -251,9 +257,9 @@ export const AppointmentProvider = ({children}) => {
         <AppointmentContext.Provider value={{
             ...state,
             getAppointmentsByOrderID: getAppointmentsByOrderID,
-            setSelected: setSelected,
+            setSelectedAppointment: setSelectedAppointment,
             clearAppointments: clearAppointments,
-            clearSelected: clearSelected,
+            clearSelectedAppointment: clearSelectedAppointment,
             getAllAppointments: getAllAppointments,
             appointmentSearch: appointmentSearch,
             getDateBetween: getDatesBetween,

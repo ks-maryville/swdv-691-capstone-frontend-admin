@@ -9,9 +9,15 @@ import {mccLogger} from "../../../customLogger";
 import {CreateOrderModal} from "../../Order/CreateOrderModal";
 import {ScheduleAppointmentModal} from "../../Appointment/ScheduleAppointmentModal";
 import {UpdateAppointmentModal} from "../../Appointment/UpdateAppointmentModal";
+import './styles.css';
 
-export const AppointmentTable = ({appointmentPrimary, invoiceNumber}) => {
-    const {appointments, setSelected, selectedAppointment, clearSelected} = useAppointmentContext();
+export const AppointmentTable = ({appointmentPrimary, invoiceNumber, primaryTable}) => {
+    const {
+        appointments,
+        setSelectedAppointment,
+        selectedAppointment,
+        clearSelectedAppointment
+    } = useAppointmentContext();
     const {selectedOrder} = useOrderContext();
     const {getOrderByID} = useOrderContext();
 
@@ -23,6 +29,10 @@ export const AppointmentTable = ({appointmentPrimary, invoiceNumber}) => {
     const [createOpen, setCreateOpen] = useState(false);
     const [updateOpen, setUpdateOpen] = useState(false);
 
+
+    const [createConditionsNotMet, setCreateConditionsNotMet] = useState(false);
+    const [updateConditionsNotMet, setUpdateConditionsNotMet] = useState(false);
+
     const columns = useMemo(() => COLUMNS, []);
 
     const data = useMemo(() => appointments, [appointments]);
@@ -32,7 +42,7 @@ export const AppointmentTable = ({appointmentPrimary, invoiceNumber}) => {
         data: data
     })
 
-    const handleSelect = async ( row) => {
+    const handleSelect = async (row) => {
         const {original, id} = row;
 
         // store which element is selected
@@ -40,16 +50,21 @@ export const AppointmentTable = ({appointmentPrimary, invoiceNumber}) => {
         // setSelectedElement(id);
         // setIsSelected(true);
 
-        if(isSelected && selectedElement === id){
+        if (isSelected && selectedElement === id) {
             setIsSelected(false);
             setSelectedElement(null);
-            clearSelected();
-        }else {
+            clearSelectedAppointment();
+        } else {
             setSelectedElement(id);
             setIsSelected(true);
+            setSelectedAppointment(original.appointmentID);
             fetchAppointment(original.appointmentID);
         }
 
+        if (appointmentPrimary) {
+            getOrderByID(original.orderID);
+            getCustomerByID(original.profileID);
+        }
         // fixed issue with selected appointment not available.
         // made selectAppointment return the found data as well as set it to appointment context so data
         // is made available immediately.
@@ -74,15 +89,9 @@ export const AppointmentTable = ({appointmentPrimary, invoiceNumber}) => {
         * */
     }
 
-    const fetchAppointment = async (appointmentID)=>{
-        let selectAppointment = await setSelected(appointmentID);
-        if(selectAppointment === true){
+    const fetchAppointment = async (appointmentID) => {
 
-            if(appointmentPrimary){
-                getOrderByID(selectedAppointment.orderID);
-                getCustomerByID(selectedAppointment.profileID);
-            }
-        }
+
     }
 
     useEffect(() => {
@@ -90,10 +99,43 @@ export const AppointmentTable = ({appointmentPrimary, invoiceNumber}) => {
         setIsSelected(null);
     }, [appointments]);
 
+    useEffect(() => {
+        if (createConditionsNotMet) {
+            setTimeout(() => {
+                setCreateConditionsNotMet(!createConditionsNotMet)
+            }, 4000)
+        }
+    }, [createConditionsNotMet]);
+
+    useEffect(() => {
+        if (updateConditionsNotMet) {
+            setTimeout(() => {
+                setUpdateConditionsNotMet(!updateConditionsNotMet)
+            }, 4000)
+        }
+    }, [updateConditionsNotMet]);
+
+    const openCreateCheck = () => {
+        if (JSON.stringify(selectedOrder) !== "{}") {
+            setCreateOpen(!createOpen);
+        } else {
+            setCreateConditionsNotMet(!createConditionsNotMet);
+        }
+    }
+
+    const openUpdateCheck = () => {
+        if (JSON.stringify(selectedAppointment) !== "{}") {
+            setUpdateOpen(!updateOpen);
+        } else {
+            setUpdateConditionsNotMet(!updateConditionsNotMet);
+        }
+    }
+
+
     const {getTableProps, getTableBodyProps, headerGroups, rows, prepareRow} = table;
 
     return (
-        <div>
+        <div className={"appointmentTable"}>
             <h2>{appointmentPrimary ? "Appointments" : "Associated Appointments"}</h2>
             <table {...getTableProps}>
                 <thead>
@@ -120,7 +162,7 @@ export const AppointmentTable = ({appointmentPrimary, invoiceNumber}) => {
                         return (
                             <tr className={isSelected && selectedElement === row.id ? "selected" : null}{...row.getRowProps()}
                                 key={uuid + row}
-                                onClick={(e) => handleSelect(row)} >
+                                onClick={(e) => handleSelect(row)}>
                                 {
 
                                     row.cells.map((cell) => {
@@ -134,8 +176,28 @@ export const AppointmentTable = ({appointmentPrimary, invoiceNumber}) => {
                 }
                 </tbody>
             </table>
-            <button onClick={()=>setUpdateOpen(JSON.stringify(selectedAppointment) !== "{}" ? !updateOpen : updateOpen)}>Update</button>
-            <button onClick={()=>setCreateOpen(JSON.stringify(selectedOrder) !== "{}" ? !createOpen : createOpen)}>Schedule Appointment</button>
+
+
+            <button
+                onClick={() => openUpdateCheck()}>Update
+            </button>
+
+            {
+                (primaryTable === "customer" || primaryTable === "order") && (
+                    <button
+                        onClick={() => openCreateCheck()}>Schedule
+                        Appointment
+                    </button>
+                )
+            }
+
+
+            {
+                createConditionsNotMet && <p style={{color: "red"}}>Must select an order to schedule an appointment</p>
+            }
+            {
+                updateConditionsNotMet && <p style={{color: "red"}}>Must select an appointment to update</p>
+            }
             {(JSON.stringify(selectedOrder) !== "{}" && createOpen) && (
                 <>
                     <div className="background" onClick={() => setCreateOpen(!createOpen)}>
@@ -150,8 +212,8 @@ export const AppointmentTable = ({appointmentPrimary, invoiceNumber}) => {
                     <div className="background" onClick={() => setUpdateOpen(!updateOpen)}>
 
                     </div>
-
                     <UpdateAppointmentModal updateOpen={updateOpen} setUpdateOpen={setUpdateOpen}/>
+
                 </>
             )}
         </div>

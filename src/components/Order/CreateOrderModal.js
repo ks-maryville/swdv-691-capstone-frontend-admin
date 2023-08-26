@@ -40,23 +40,34 @@ export const CreateOrderModal = ({createOpen, setCreateOpen})=>{
             <div className={"left"}>
 
                 <div>
-                    <input type="text" name="" id="" placeholder={"invoice number"}
-                           onChange={(e) => setInvoiceNumber(e.target.value)}/>
-                    <select name="" id="" onChange={(e)=>setStatus(e.target.value)} disabled>
-                        <option value="pending">pending</option>
-                        <option value="arrived">arrived</option>
-                        <option value="delivered">delivered</option>
-                    </select>
-                    <select name="" id="" onChange={(e)=>setLocation(e.target.value)}>
-                        <option value="">Location</option>
-                        {
-                            locations.map(location=>{
-                                return <option value={location}>{location}</option>
-                            })
-                        }
-                    </select>
+                    <div>
+                        <label htmlFor="">Invoice #</label>
+                        <input type="text" name="" id="" placeholder={"invoice number"}
+                               onChange={(e) => setInvoiceNumber(e.target.value)}/>
+                    </div>
+                   <div>
+                       <label htmlFor="">Status</label>
+                       <select name="" id="" onChange={(e)=>setStatus(e.target.value)} disabled>
+                           <option value="pending">pending</option>
+                           <option value="arrived">arrived</option>
+                           <option value="delivered">delivered</option>
+                       </select>
+                   </div>
+
+                    <div>
+                        <label htmlFor="">Location</label>
+                        <select name="" id="" onChange={(e)=>setLocation(e.target.value)}>
+                            <option value="">Location</option>
+                            {
+                                locations.map(location=>{
+                                    return <option value={location}>{location}</option>
+                                })
+                            }
+                        </select>
+                    </div>
+
                 </div>
-                <button>Cancel</button>
+                <button onClick={(e)=>setCreateOpen(!createOpen)}>Cancel</button>
                 <button onClick={() => handleSubmit()}>Submit</button>
             </div>
             <div className={"right error"}>

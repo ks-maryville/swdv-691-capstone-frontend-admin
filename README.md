@@ -1,70 +1,47 @@
-# Getting Started with Create React App
+John Doe Furniture Company Admin Panel
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+Current Functionality:
+Create and update customers
+Create and update orders
+Create and update appointments
+Email notification is sent the user upon registration
+Email is sent when order status as been updated
+Searching for customers, orders and appointments
 
-In the project directory, you can run:
+Current business requirements are as follows: <br>
+All times must be in central time<br>
+Appointments must be scheduled during business hours of 10am cst - 5pm cst <br>
+All times are to be displayed in central time <br>
+Customer must receive an email notification once their order has arrived <br>
+Customer must receive an email notification upon registration <br>
+Only admins can register new customers <br>
+One customer per 15 minutes may be scheduled during business hours <br>
+Admin must be able to search for customers, appointments, and orders.
 
-### `npm start`
+All current business requirements have been met. 
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+INSTRUCTIONS ON HOW TO USE THE SYSTEM:
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Creating customers -  
+To create a new customer, navigate to the "customers" page.
+Below the table you will find a "New Customer" button.
+Click on the button and fill in the requested details and press submit to save the customer.
 
-### `npm test`
+Note - new customers may only be created on the "customers" page. All other pages allow for upating the customer, but not creating new customers.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Updating Customers -
+On the "customers" page, select the desired customer by clicking on the row in the table.
+Click the "update" button
+Fill in the details and click the "submit" button to save the customer. 
 
-### `npm run build`
+Note - A customer MUST be selected before click the update button
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+These same processes apply for both the orders and appointment tables.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Searching - 
+Search is pretty self-explanatory. Simply enter text in the fields and click submit.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Testing email functionality - 
+For the sake of the project all users can be created through the 'new user' button on the customers page. 
+An email will also be sent when the status an order is changed "arrived".

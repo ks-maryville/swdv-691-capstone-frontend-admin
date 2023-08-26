@@ -8,10 +8,16 @@ import {locations} from "../../locations";
 export const UpdateAppointmentModal = ({updateOpen, setUpdateOpen}) => {
     const {createOrder, message, selectedOrder} = useOrderContext();
     const {selectedCustomer} = useCustomerContext();
-    const {selectedAppointment, scheduleAppointment,updateAppointment, checkAvailable, unavailableDates} = useAppointmentContext();
+    const {
+        selectedAppointment,
+        scheduleAppointment,
+        updateAppointment,
+        checkAvailable,
+        unavailableDates
+    } = useAppointmentContext();
 
-    const [date, setDate] = useState(JSON.stringify(selectedAppointment) !== "{}" && (selectedAppointment.appointmentDate.slice(-5)));
-    const [time, setTime] = useState(JSON.stringify(selectedAppointment) !== "{}" && (selectedAppointment.appointmentDate.slice(0,10)));
+    const [date, setDate] = useState(JSON.stringify(selectedAppointment) !== "{}" && (selectedAppointment.appointmentDate.slice(0, 10)));
+    const [time, setTime] = useState(JSON.stringify(selectedAppointment) !== "{}" && (selectedAppointment.appointmentDate.slice(-5)));
     const [status, setStatus] = useState(selectedAppointment.status);
     const [notes, setNotes] = useState(selectedAppointment.notes);
 
@@ -41,7 +47,7 @@ export const UpdateAppointmentModal = ({updateOpen, setUpdateOpen}) => {
 
     }
 
-    const mapTimes =  () => times.map( (time) =>  {
+    const mapTimes = () => times.map((time) => {
         console.log("times should be mapped");
         let dateTime = date + " " + time;
         console.log(unavailableDates.includes(dateTime));
@@ -62,9 +68,9 @@ export const UpdateAppointmentModal = ({updateOpen, setUpdateOpen}) => {
     }
 
     useEffect(() => {
-        console.log(date);
+        console.log("UPDATE MODAL DATE", date);
         checkAvailable(date, selectedOrder.location)
-        console.log(time);
+        console.log("UPDATE MODAL TIME", time);
     }, [date, time]);
 
     return (
@@ -77,26 +83,33 @@ export const UpdateAppointmentModal = ({updateOpen, setUpdateOpen}) => {
             <div className={"left"}>
 
                 <div>
-
+                    <label htmlFor="">Date</label>
                     <input type="date" value={date} onChange={(e) => handleDate(e)}/>
+                </div>
 
-                    <select value={time} onChange={(e) => handleTime(e)} disabled={dateSelected === false}>
-                        <option value="">Time</option>
+                <div>
+                    <label htmlFor="">Time</label>
+                    <select value={time} onChange={(e) => handleTime(e)}>
+                        <option value="">{time}</option>
                         {
                             mapTimes()
                         }
-                    </select>
+                    </select></div>
+                <div>
+                    <label htmlFor="">Status</label>
                     <select name="" id="" value={status} onChange={(e) => setStatus(e.target.value)}>
                         <option value="pending">pending</option>
                         <option value="delivered">delivered</option>
                         <option value="cancelled">cancelled</option>
-                    </select>
+                    </select></div>
+                <div>
+                    <label htmlFor="">Notes</label>
                     <input type="text" name="" id="" value={notes} placeholder={"notes"}
                            onChange={(e) => setNotes(e.target.value)}/>
                 </div>
-                <button>Cancel</button>
-                <button onClick={() => handleSubmit()}>Submit</button>
             </div>
+            <button onClick={(e) => setUpdateOpen(!updateOpen)}>Cancel</button>
+            <button onClick={() => handleSubmit()}>Submit</button>
             <div className={"right error"}>
                 {Object.keys("message").length > 0 && message.date ? message.date.map(item => <p
                     style={{color: "red"}}>{item}</p>) : null}

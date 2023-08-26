@@ -8,11 +8,11 @@ import {useCustomerContext} from "../../../context/CustomerContext";
 import {CreateOrderModal} from "../../Order/CreateOrderModal";
 import {UpdateOrderModal} from "../../Order/UpdateOrderModal";
 import {create} from "axios";
-
-export const OrderTable = ({orderPrimary}) => {
-    const {orders, setSelected, selectedOrder, clearSelected} = useOrderContext();
+import './styles.css';
+export const OrderTable = ({orderPrimary, primaryTable}) => {
+    const {orders, setSelectedOrder, selectedOrder, clearSelectedOrder} = useOrderContext();
     const {getAppointmentsByOrderID, clearAppointments} = useAppointmentContext();
-    const {getCustomerByID, selectedCustomer} = useCustomerContext();
+    const {getCustomerByID, selectedCustomer,setSelectedCustomer, clearCustomers} = useCustomerContext();
 
 
     const [isSelected, setIsSelected] = useState(false);
@@ -20,6 +20,9 @@ export const OrderTable = ({orderPrimary}) => {
 
     const [createOpen, setCreateOpen] = useState(false);
     const [updateOpen, setUpdateOpen] = useState(false);
+    const [createConditionsNotMet, setCreateConditionsNotMet] = useState(false);
+    const [updateConditionsNotMet, setUpdateConditionsNotMet] = useState(false);
+
 
     const columns = useMemo(() => COLUMNS, []);
 
@@ -33,18 +36,27 @@ export const OrderTable = ({orderPrimary}) => {
 
     const {getTableProps, getTableBodyProps, headerGroups, rows, prepareRow} = table;
 
-    const handleSelect = async (row) => {
+    const handleSelect =  (row) => {
+        console.log("HANDLE SELECT IS BEING CALLED");
         const {original, id} = row;
 
-        if(isSelected && selectedElement === id){
+        if (isSelected && selectedElement === id) {
             setIsSelected(false);
             setSelectedElement(null);
-            clearSelected();
+            clearSelectedOrder();
             clearAppointments();
-        }else{
+        } else {
             setSelectedElement(id);
             setIsSelected(true);
-            await fetchOrder(original.orderID);
+            setSelectedOrder(original.orderID);
+
+            fetchOrder(original.orderID);
+        }
+
+        if (orderPrimary) {
+            getCustomerByID(original.profileID);
+            setSelectedCustomer(original.profileID);
+            clearCustomers();
         }
         /*
         *
@@ -57,32 +69,54 @@ export const OrderTable = ({orderPrimary}) => {
         * */
     }
 
-    const fetchOrder = async (orderID)=>{
+    const fetchOrder = (orderID) => {
 
-        let selectOrder = await setSelected(orderID);
-        // if(selectOrder !== null || Object.keys(selectOrder).length > 0) {
-        //     getAppointmentsByOrderID(orderID);
-        //
-        //     if(orderPrimary) {
-        //         getCustomerByID(selectOrder.profileID);
-        //     }
-        // }
-        if(selectOrder === true) {
-            getAppointmentsByOrderID(orderID);
+        console.log(selectedOrder.profileID);
+        getAppointmentsByOrderID(orderID);
+    }
 
-            if(orderPrimary) {
-                getCustomerByID(selectOrder.profileID);
-            }
+    const openCreateCheck = ()=>{
+        if(JSON.stringify(selectedCustomer) !== "{}"){
+            setCreateOpen(!createOpen);
+        }else{
+            setCreateConditionsNotMet(!createConditionsNotMet);
         }
     }
 
+    const openUpdateCheck = ()=>{
+        if(JSON.stringify(selectedOrder) !== "{}"){
+            setUpdateOpen(!updateOpen);
+        }else{
+            setUpdateConditionsNotMet(!updateConditionsNotMet);
+        }
+    }
     useEffect(() => {
-        setSelectedElement(null);
-        setIsSelected(false);
-    }, [orders]);
+
+
+        // setSelectedElement(null);
+        // setIsSelected(false);
+
+    }, [selectedOrder, orders]);
+
+    useEffect(() => {
+        if(createConditionsNotMet){
+            setTimeout(()=>{
+                setCreateConditionsNotMet(!createConditionsNotMet)
+            },4000)
+        }
+    }, [ createConditionsNotMet]);
+
+    useEffect(() => {
+        if(updateConditionsNotMet){
+            setTimeout(()=>{
+                setUpdateConditionsNotMet(!updateConditionsNotMet)
+            },4000)
+        }
+    }, [ updateConditionsNotMet]);
+
 
     return (
-        <div>
+        <div className={"orderTable"}>
             <h2>{orderPrimary ? "Orders" : "Associated Orders"}</h2>
             <table {...getTableProps}>
                 <thead>
@@ -121,16 +155,23 @@ export const OrderTable = ({orderPrimary}) => {
                 }
                 </tbody>
             </table>
-            <button onClick={JSON.stringify(selectedOrder) !== "{}" ? () => setUpdateOpen(!updateOpen) : null}>Update
+            <button onClick={()=>openUpdateCheck()}>Update
             </button>
 
             {
-                !orderPrimary && (
+                (( primaryTable === "customer") && (
                     <button
-                        onClick={() => setCreateOpen(JSON.stringify(selectedCustomer) !== "{}" ? !createOpen : createOpen)}>Create
+                        onClick={() => openCreateCheck()}>Create
                         Order
                     </button>
-                )
+                ))
+            }
+
+            {
+                createConditionsNotMet && <p style={{color:"red"}}>Must select a customer to create order</p>
+            }
+            {
+                updateConditionsNotMet && <p style={{color:"red"}}>Must select an order to update</p>
             }
 
             {(JSON.stringify(selectedCustomer) !== "{}" && createOpen) && (
@@ -151,7 +192,7 @@ export const OrderTable = ({orderPrimary}) => {
                     <UpdateOrderModal updateOpen={updateOpen} setUpdateOpen={setUpdateOpen}/>
 
                 </>
-            ) : null }
+            ) : null}
 
         </div>
 

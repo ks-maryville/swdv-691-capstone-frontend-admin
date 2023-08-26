@@ -11,10 +11,10 @@ import {useAppointmentContext} from "../../../context/AppointmentContext";
 import {create} from "axios";
 import {CreateCustomerModal} from "../../Customer/CreateCustomerModal";
 import {UpdateCustomerModal} from "../../Customer/UpdateCustomerModal";
-
+import './styles.css'
 export const CustomerTable = ({customerPrimary}) => {
 
-    const {customers, selectedCustomer, setSelected, clearSelected} = useCustomerContext();
+    const {customers, selectedCustomer, setSelectedCustomer, clearSelectedCustomer} = useCustomerContext();
     const {getOrdersByProfileID, selectedOrder, clearOrders} = useOrderContext();
     const {clearAppointments} = useAppointmentContext();
 
@@ -23,7 +23,7 @@ export const CustomerTable = ({customerPrimary}) => {
 
     const [createOpen, setCreateOpen] = useState(false);
     const [updateOpen, setUpdateOpen] = useState(false);
-
+    const [updateConditionsNotMet, setUpdateConditionsNotMet] = useState(false);
 
     const formattedData = [];
 
@@ -67,8 +67,7 @@ export const CustomerTable = ({customerPrimary}) => {
         if (isSelected && selectedElement === id) {
             setIsSelected(false);
             setSelectedElement(null);
-            clearSelected();
-            clearOrders();
+            clearSelectedCustomer();
         } else {
             setSelectedElement(id);
             setIsSelected(true);
@@ -87,24 +86,49 @@ export const CustomerTable = ({customerPrimary}) => {
     }
 
     const fetchCustomer = async (profileID) => {
-        let selectCustomer = await setSelected(profileID);
+        let selectCustomer = await setSelectedCustomer(profileID);
         if (selectCustomer === true) {
 
             if (customerPrimary) {
                 clearAppointments();
+                clearOrders();
                 getOrdersByProfileID(profileID);
             }
         }
     }
-    useEffect(() => {
 
-        // when the table reloads unselect the current ui elements
+    const openUpdateCheck = ()=>{
+        console.log("open update check")
+        if(JSON.stringify(selectedCustomer) !== "{}"){
+            setUpdateOpen(!updateOpen);
+        }else{
+            console.log("conditions not met")
+            setUpdateConditionsNotMet(!updateConditionsNotMet);
+
+        }
+        // setTimeout(()=>{
+        //     console.log("settimeout")
+        //     setUpdateConditionsNotMet(!updateConditionsNotMet)
+        // }, 2000);
+    }
+
+    useEffect(() => {
         setSelectedElement(null);
         setIsSelected(null);
     }, [customers]);
 
+    useEffect(() => {
+        if(updateConditionsNotMet){
+            setTimeout(()=>{
+                setUpdateConditionsNotMet((!updateConditionsNotMet))
+            },4000)
+        }
+    }, [ updateConditionsNotMet]);
+
+
+
     return (
-        <div>
+        <div className={"customerTable"}>
             <h2>{customerPrimary ? `Customers` : 'Associated Customer'}</h2>
             <table {...getTableProps}>
                 <thead>
@@ -154,14 +178,16 @@ export const CustomerTable = ({customerPrimary}) => {
                 }
                 </tbody>
             </table>
+
             <button
-                onClick={JSON.stringify(selectedCustomer) !== "{}" ? () => setUpdateOpen(!updateOpen) : null}>Update
+                onClick={() => openUpdateCheck()}>Update
             </button>
             {
                 customerPrimary && (
                     <button onClick={() => setCreateOpen(!createOpen)}>New Customer</button>
                 )
             }
+            {updateConditionsNotMet && <p style={{color: "red"}}>Must select a customer to update</p>}
             {createOpen && (
                 <>
                     <div className={"background"} onClick={() => setCreateOpen(!createOpen)}></div>

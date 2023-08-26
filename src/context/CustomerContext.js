@@ -79,26 +79,6 @@ export const CustomerProvider = ({children}) => {
     //     })
     // }
 
-    // const createCustomer = (userObj, profileObj, phoneObj, addressObj) => {
-    //
-    //     const userCreate = async () => {
-    //
-    //         try{
-    //             const createUser = await request().post('auth/register', userObj)
-    //             return true;
-    //         }catch(err){
-    //
-    //             // dispatch({
-    //             //     type: SEARCH_ERROR,
-    //             //     payload: createUser.data
-    //             // })
-    //             return false;
-    //         }
-    //     }
-    //     if(userCreate() === false){
-    //         console.log("user create failed");
-    //     }
-    // }
 
     const createCustomer = async (obj) => {
         try {
@@ -149,21 +129,27 @@ export const CustomerProvider = ({children}) => {
             }
         }
 
-        let found = await requestWithToken(token).get(`/profile/search${queryString}`)
-
-        if (found.data.success === false) {
-            return dispatch({
-                type: ERROR,
+        try {
+            let found;
+            if (queryString === "" || queryString === undefined || queryString.length < 1) {
+                found = await requestWithToken(token).get(`/profile`)
+            } else {
+                found = await requestWithToken(token).get(`/profile/search${queryString}`)
+            }
+            dispatch({
+                type: GET_ALL_CUSTOMERS,
                 payload: found.data
             })
+            return true;
+        } catch (err) {
+            dispatch({
+                type: ERROR,
+                payload: err.response.data
+            })
+            return false;
         }
 
 
-        dispatch({
-            type: GET_ALL_CUSTOMERS,
-            payload: found.data
-        })
-        return true;
     }
 
     const clearCustomers = () => {
@@ -172,7 +158,7 @@ export const CustomerProvider = ({children}) => {
             payload: null
         })
     }
-    const setSelected = async (profileID) => {
+    const setSelectedCustomer = async (profileID) => {
         let found = await requestWithToken(token).get(`/profile/${profileID}`);
 
         if (found.data.success === false) {
@@ -236,7 +222,7 @@ export const CustomerProvider = ({children}) => {
         })
     }
 
-    const clearSelected = () =>{
+    const clearSelectedCustomer = () => {
         dispatch({
             type: CLEAR_SELECTED,
             payload: null
@@ -265,8 +251,8 @@ export const CustomerProvider = ({children}) => {
         <CustomerContext.Provider value={{
             ...state,
             customerSearch: customerSearch,
-            setSelected: setSelected,
-            clearSelected: clearSelected,
+            setSelectedCustomer: setSelectedCustomer,
+            clearSelectedCustomer: clearSelectedCustomer,
             getAllCustomers: getAllCustomers,
             clearCustomers: clearCustomers,
             getCustomerByID: getCustomerByID,

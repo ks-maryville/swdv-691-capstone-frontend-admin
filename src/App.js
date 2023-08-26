@@ -29,8 +29,8 @@ function App() {
 
     }, []);
 
-   checkBusinessHours("2023-08-24");
-   toUTC("2023-08-25 12:00");
+    checkBusinessHours("2023-08-24");
+    toUTC("2023-08-25 12:00");
     return (
         <main className={"App"}>
             <Routes>
@@ -43,10 +43,11 @@ function App() {
 
                 {/*PROTECTED ROUTES - ONLY ADMINS MAY ACCESS*/}
                 <Route element={<Protected/>}>
-                    <Route path={"dashboard"} element={<Dashboard/>}/>
-                    <Route path={"customers"} element={<AdminCustomerPage/>}></Route>
-                    <Route path={"orders"} element={<AdminOrderPage/>}/>
-                    <Route path={"appointments"} element={<AdminAppointmentPage/>}/>
+                        <Route path={"dashboard"} element={<Dashboard/>}/>
+                        <Route path={"customers"} element={<AdminCustomerPage/>}></Route>
+                        <Route path={"orders"} element={<AdminOrderPage/>}/>
+                        <Route path={"appointments"} element={<AdminAppointmentPage/>}/>
+
                 </Route>
 
 

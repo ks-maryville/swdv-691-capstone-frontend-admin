@@ -27,7 +27,8 @@ export const authReducer = (state, action) => {
         case "logout_user":
             return {
                 authenticated: false,
-                user: {}
+                user: {},
+                token: ""
             }
         case "auth_error":
             return {
@@ -37,7 +38,8 @@ export const authReducer = (state, action) => {
         case "refresh":
             return {
                 authenticated: true,
-                user: action.payload.data
+                user: action.payload.user,
+                token: action.payload.token
             }
         default:
             return state;

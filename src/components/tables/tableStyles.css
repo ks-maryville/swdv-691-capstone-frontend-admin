@@ -28,3 +28,31 @@ table th {
 .selected {
     background-color: #ddd;
 }
+
+/*.customerTable, .appointmentTable, .orderTable {*/
+/*    background-color: pink;*/
+/*    margin-bottom: 20px;*/
+/*    !*margin-top: 20px;*!*/
+/*}*/
+/*.customerTable > button {*/
+/*    border: none;*/
+/*    border: 1px solid grey;*/
+/*    float: right;*/
+/*    margin-left: 10px;*/
+/*    margin-top: 10px;*/
+/*}*/
+
+/*.appointmentTable > button {*/
+/*    border: none;*/
+/*    border: 1px solid grey;*/
+/*    float: right;*/
+/*    margin-left: 10px;*/
+/*    margin-top: 10px;*/
+/*}*/
+/*.orderTable > button {*/
+/*    border: none;*/
+/*    border: 1px solid grey;*/
+/*    float: right;*/
+/*    margin-left: 10px;*/
+/*    margin-top: 10px;*/
+/*}*/

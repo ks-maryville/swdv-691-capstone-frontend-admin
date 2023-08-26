@@ -7,17 +7,23 @@ import {useOrderContext} from "../context/OrderContext";
 import {useAppointmentContext} from "../context/AppointmentContext";
 
 export const AdminOrderPage = () => {
+    const PRIMARY_TABLE="order";
     const [invoiceNumber, setInvoiceNumber] = useState("");
     const [status, setStatus] = useState("");
     const [minDate, setMinDate] = useState("");
     const [maxDate, setMaxDate] = useState("");
 
-    const {customerSearch, getAllCustomers, selectedCustomer, clearCustomers} = useCustomerContext();
-    const {selectedOrder, clearOrders, orderSearch, getAllOrders} = useOrderContext();
-    const {clearAppointments} = useAppointmentContext();
+    const {customerSearch, getAllCustomers, selectedCustomer, clearCustomers, clearSelectedCustomer} = useCustomerContext();
+    const {selectedOrder, clearOrders, orderSearch, getAllOrders,clearSelectedOrder} = useOrderContext();
+    const {clearAppointments, clearSelectedAppointment} = useAppointmentContext();
 
     useEffect(() => {
         getAllOrders();
+        clearAppointments();
+        clearCustomers();
+        clearSelectedAppointment();
+        clearSelectedOrder();
+        clearSelectedCustomer();
     }, [])
 
     const handleSubmit = () => {
@@ -42,22 +48,19 @@ export const AdminOrderPage = () => {
 
     return (
         <div className="ordersPage">
-            ORDER PAGE
+
             <input type="text" placeholder={"invoiceNumber"} onChange={(e) => setInvoiceNumber(e.target.value)}/>
             <input type="text" placeholder={"status"} onChange={(e) => setStatus(e.target.value)}/>
-            <input type="text" placeholder={"minDate"} onChange={(e) => setMinDate(e.target.value)}/>
-            <input type="text" placeholder={"maxDate"} onChange={(e) => setMaxDate(e.target.value)}/>
+            {/*<input type="text" placeholder={"minDate"} onChange={(e) => setMinDate(e.target.value)}/>*/}
+            {/*<input type="text" placeholder={"maxDate"} onChange={(e) => setMaxDate(e.target.value)}/>*/}
             <button onClick={() => handleSubmit()}>SEARCH</button>
             <OrderTable orderPrimary className={"orderTable"} profileID={selectedCustomer && selectedCustomer.profileID}
-                        customerName={selectedCustomer && selectedCustomer.firstName}/>
+                        customerName={selectedCustomer && selectedCustomer.firstName} primaryTable={PRIMARY_TABLE}/>
 
             <AppointmentTable className={"appointmentTable"} profileID={selectedOrder && selectedOrder.orderID}
-                              invoiceNumber={selectedOrder && selectedOrder.invoiceNumber}/>
-            <CustomerTable className="customerTable"/>
+                              invoiceNumber={selectedOrder && selectedOrder.invoiceNumber} primaryTable={PRIMARY_TABLE}/>
+            <CustomerTable className="customerTable" primaryTable={PRIMARY_TABLE}/>
 
-
-            <div className="ordersTable"></div>
-            <div className="appointmentsTable"></div>
         </div>
     )
 }

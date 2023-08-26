@@ -79,48 +79,63 @@ export const AuthProvider = ({children}) => {
         //     .catch(err => console.log(err));
         // let response = await request().post(`/auth/login`, data);
 
-        try{
+        try {
             let response = await request().post(`/auth/login`, data);
-            return dispatch({
+            dispatch({
                 type: LOGIN_USER,
                 payload: response.data
             })
-        }catch(err){
-            return dispatch({
+            // set token to local storage
+            localStorage.setItem("token", response.data.data.token);
+            localStorage.setItem("currentUser", JSON.stringify(response.data.data.user));
+            return true;
+        } catch (err) {
+            console.log(err.response);
+            dispatch({
                 type: AUTH_ERROR,
                 payload: err.response.data
             })
+            return false;
         }
-
 
 
     }
 
     const logout = async () => {
-        localStorage.removeItem("token");
+        // localStorage.removeItem("token");
         dispatch({
             type: LOGOUT_USER,
-            payload: null
+            payload: {}
         })
+        localStorage.removeItem("token");
+        localStorage.removeItem("currentUser");
         return true;
     }
 
     const refresh = (email) => {
-        let encoded = encodeURIComponent(`${email}`);
-
-        fetch(`${server}auth/refresh?email=${encoded}`)
-            .then(response => response.json())
-            .then(response => {
-                dispatch({
-                    type: REFRESH,
-                    payload: response
-                });
-                return true;
+        // let encoded = encodeURIComponent(`${email}`);
+        //
+        // fetch(`${server}auth/refresh?email=${encoded}`)
+        //     .then(response => response.json())
+        //     .then(response => {
+        //         dispatch({
+        //             type: REFRESH,
+        //             payload: response
+        //         });
+        //         return true;
+        //     })
+        //     .catch(err => {
+        //         return false;
+        //     })
+        if (localStorage.getItem("token") !== null) {
+            dispatch({
+                type: REFRESH,
+                payload: {
+                    user: JSON.parse(localStorage.getItem("currentUser")),
+                    token: localStorage.getItem("token")
+                }
             })
-            .catch(err => {
-                return false;
-            })
-
+        }
     }
 
 

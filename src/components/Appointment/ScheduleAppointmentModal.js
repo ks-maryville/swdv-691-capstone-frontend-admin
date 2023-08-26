@@ -40,7 +40,7 @@ export const ScheduleAppointmentModal = ({createOpen, setCreateOpen}) => {
 
     }
 
-    const mapTimes =  () => times.map( (time) =>  {
+    const mapTimes = () => times.map((time) => {
         console.log("times should be mapped");
         let dateTime = date + " " + time;
         console.log(unavailableDates.includes(dateTime));
@@ -88,24 +88,29 @@ export const ScheduleAppointmentModal = ({createOpen, setCreateOpen}) => {
                     {/*        })*/}
                     {/*    }*/}
                     {/*</select>*/}
+                    <label htmlFor="">Date</label>
                     <input type="date"
                            onChange={(e) => handleDate(e)}/>
-
+                </div>
+                <div><label htmlFor="">Time</label>
                     <select onChange={(e) => handleTime(e)} disabled={dateSelected === false}>
                         <option value="">Time</option>
                         {
-                         mapTimes()
+                            mapTimes()
                         }
-                    </select>
+                    </select></div>
+                <div>
+                    <label htmlFor="">Status</label>
                     <select name="" id="" onChange={(e) => setStatus(e.target.value)} disabled>
                         <option value="pending">pending</option>
                         <option value="delivered">delivered</option>
                         <option value="cancelled">cancelled</option>
-                    </select>
+                    </select></div>
+                <div>
+                    <label htmlFor="">Notes</label>
                     <input type="text" name="" id="" placeholder={"notes"}
-                           onChange={(e) => setNotes(e.target.value)}/>
-                </div>
-                <button>Cancel</button>
+                           onChange={(e) => setNotes(e.target.value)}/></div>
+                <button onClick={(e) => setCreateOpen(!createOpen)}>Cancel</button>
                 <button onClick={() => handleSubmit()}>Submit</button>
             </div>
             <div className={"right error"}>
