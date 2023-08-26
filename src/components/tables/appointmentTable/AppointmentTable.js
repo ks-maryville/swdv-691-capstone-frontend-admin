@@ -8,6 +8,7 @@ import {useAppointmentContext} from "../../../context/AppointmentContext";
 import {mccLogger} from "../../../customLogger";
 import {CreateOrderModal} from "../../Order/CreateOrderModal";
 import {ScheduleAppointmentModal} from "../../Appointment/ScheduleAppointmentModal";
+import {UpdateAppointmentModal} from "../../Appointment/UpdateAppointmentModal";
 
 export const AppointmentTable = ({appointmentPrimary, invoiceNumber}) => {
     const {appointments, setSelected, selectedAppointment, clearSelected} = useAppointmentContext();
@@ -133,7 +134,7 @@ export const AppointmentTable = ({appointmentPrimary, invoiceNumber}) => {
                 }
                 </tbody>
             </table>
-            <button>Update</button>
+            <button onClick={()=>setUpdateOpen(JSON.stringify(selectedAppointment) !== "{}" ? !updateOpen : updateOpen)}>Update</button>
             <button onClick={()=>setCreateOpen(JSON.stringify(selectedOrder) !== "{}" ? !createOpen : createOpen)}>Schedule Appointment</button>
             {(JSON.stringify(selectedOrder) !== "{}" && createOpen) && (
                 <>
@@ -142,6 +143,15 @@ export const AppointmentTable = ({appointmentPrimary, invoiceNumber}) => {
                     </div>
 
                     <ScheduleAppointmentModal createOpen={createOpen} setCreateOpen={setCreateOpen}/>
+                </>
+            )}
+            {(JSON.stringify(selectedAppointment) !== "{}" && updateOpen) && (
+                <>
+                    <div className="background" onClick={() => setUpdateOpen(!updateOpen)}>
+
+                    </div>
+
+                    <UpdateAppointmentModal updateOpen={updateOpen} setUpdateOpen={setUpdateOpen}/>
                 </>
             )}
         </div>
