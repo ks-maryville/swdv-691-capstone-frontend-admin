@@ -8,6 +8,7 @@ import {useAuthContext} from "./AuthContext";
 import {toUTC} from "../Helper/time";
 
 const {
+    UPDATE_APPOINTMENT,
     CLEAR_SELECTED,
     CREATE_APPOINTMENT,
     ERROR,
@@ -52,14 +53,14 @@ export const AppointmentProvider = ({children}) => {
     }
 
     const updateAppointment = async (appointmentObj) => {
-        appointmentObj.date = toUTC(appointmentObj.date);
 
         try {
             let updated = await requestWithToken(token).put(`appointment/update/${appointmentObj.appointmentID}`, appointmentObj);
             dispatch({
-                type: CREATE_APPOINTMENT,
+                type: UPDATE_APPOINTMENT,
                 payload: updated.data
             })
+            return true;
         } catch (err) {
             dispatch({
                 type: ERROR,
