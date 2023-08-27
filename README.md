@@ -1,4 +1,12 @@
 John Doe Furniture Company Admin Panel
+<br>
+<br>
+
+
+UPDATE -- Currently there is an issue with the customer table not refreshing automatically when a new customer is added. For now, click the search button at the top of the page with all fields empty for the table to refresh.
+
+
+
 
 IMPORTANT -- THESE ARE THE CREDENTIALS FOR TESTING:
 username: swdvcapstone@test.com
