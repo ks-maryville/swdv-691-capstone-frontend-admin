@@ -1,5 +1,8 @@
 John Doe Furniture Company Admin Panel
 
+IMPORTANT -- THESE ARE THE CREDENTIALS FOR TESTING:
+username: swdvcapstone@test.com
+password: 123456789
 
 Current Functionality:
 Create and update customers
